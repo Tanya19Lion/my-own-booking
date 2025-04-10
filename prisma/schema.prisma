@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Owner {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  firstName String
+  lastName  String
+  bio	   	  String
+  password  String
+  avatarUrl String
+  hostings  Hosting[]
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+}
+
+model Hosting {
+  id              Int           @id @default(autoincrement())
+  slug            String        @unique
+  name            String        @unique
+  description     String
+  location        String
+  images          Json
+  price           Int
+  maxGuests       Int
+  guestFavorite   Boolean
+  rating          Float
+  availability    Availability? 
+  availabilityId  Int?
+  ownerId         Int
+  owner           Owner         @relation(fields: [ownerId], references: [id])
+  updatedAt       DateTime      @updatedAt
+  createdAt       DateTime      @default(now())
+}
+
+model Availability {
+  id        Int       @id @default(autoincrement())
+  from      DateTime?
+  to        DateTime?
+  hostingId Int       @unique
+  hosting   Hosting   @relation(fields: [hostingId], references: [id])
+}
