@@ -34,13 +34,13 @@ export default function Header() {
 							return <li 
 										key={route.path} 
 										className={cn("hover:text-white transition relative flex items-center", {
-											'text-white': activePathname === route.path,
+											'text-white': activePathname.toLowerCase() === route.path,
 											'text-white/50': activePathname !== route.path
 										})}
 									>
 								<Link href={route.path}>{route.name}</Link>
 								{
-									activePathname === route.path && (
+									activePathname.toLowerCase() === route.path && (
 										<motion.div 
 											layoutId="nav-active" 
 											className="bg-accent h-1 w-full absolute bottom-[-25]"

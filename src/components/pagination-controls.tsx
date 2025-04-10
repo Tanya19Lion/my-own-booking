@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 type PaginationControlsProps = {
 	previousPath: string;

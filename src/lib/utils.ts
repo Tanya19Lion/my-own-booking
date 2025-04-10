@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { PrismaClient, Hosting, Owner, Availability } from "@prisma/client";
 import { HostingWithOwner } from "./types";
+import { notFound } from "next/navigation";
 
 const prisma = new PrismaClient();
 
@@ -17,8 +18,13 @@ export const getImageUrl = (filename: string) => {
 	return `/assets/${filename}`;
 };
 
-export async function getHostings() {	
+export async function getHostings(place: string, page: number = 1) {	
 	const hostings: HostingWithOwner[] = await prisma.hosting.findMany({
+		where: {
+			location: place === 'All' ? undefined : {
+				contains: capitalizePlaceName(place),
+			}
+		},
 		include: {
 			owner: {
 				select: {
@@ -29,10 +35,28 @@ export async function getHostings() {
 					avatarUrl: true,
 				}
 			},
-		}
+		},
+		take: 6,
+		skip: (+page - 1) * 6,
 	});
 
-	return hostings;
+	let totalCount = 0;
+	if (place === 'All') {
+		totalCount = await prisma.hosting.count();
+	} else {
+		totalCount = await prisma.hosting.count({
+			where: {
+				location: {
+					contains: capitalizePlaceName(place),
+				}				
+			},
+		});
+	}
+
+	return { 
+		hostings,
+		totalCount
+	};
 };
 
 export async function getHosting(slug: string) {
@@ -52,6 +76,10 @@ export async function getHosting(slug: string) {
 			},
 		}
 	});
+
+	if (!hosting) {
+		return notFound();
+	}
 
 	return hosting;
 };
