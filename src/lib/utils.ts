@@ -18,12 +18,29 @@ export const getImageUrl = (filename: string) => {
 	return `/assets/${filename}`;
 };
 
-export async function getHostings(place: string, page: number = 1) {	
-	const hostings: HostingWithOwner[] = await prisma.hosting.findMany({
+
+
+export async function getHostings(place: string, page: number = 1, maxGuests: number, startDate?: Date,	endDate?: Date) {
+	const shouldFilterByAvailability = !!startDate && !!endDate;
+console.log(maxGuests, startDate, endDate);
+	const hostings = await prisma.hosting.findMany({
 		where: {
 			location: place === 'All' ? undefined : {
-				contains: capitalizePlaceName(place),
-			}
+				contains: capitalizePlaceName(place),		
+			},
+			maxGuests: {
+				gte: maxGuests,
+			},
+			...(shouldFilterByAvailability && {
+				availability: {
+					from: {
+						lte: startDate,
+					},
+					to: {
+						gte: endDate,
+					},
+				},
+			}),
 		},
 		include: {
 			owner: {
@@ -33,31 +50,43 @@ export async function getHostings(place: string, page: number = 1) {
 					lastName: true,
 					bio: true,
 					avatarUrl: true,
-				}
+				},
 			},
 		},
-		take: 6,
-		skip: (+page - 1) * 6,
+	  	take: 6,
+	  	skip: (page - 1) * 6,
 	});
-
+  
 	let totalCount = 0;
-	if (place === 'All') {
-		totalCount = await prisma.hosting.count();
-	} else {
-		totalCount = await prisma.hosting.count({
-			where: {
-				location: {
-					contains: capitalizePlaceName(place),
-				}				
+  
+	const whereForCount = {
+		location: place === 'All' ? undefined : {
+			contains: capitalizePlaceName(place),
+		},
+		maxGuests: {
+			gte: maxGuests,
+		},
+		...(shouldFilterByAvailability && {
+			availability: {
+				from: {
+					lte: startDate,
+				},
+				to: {
+					gte: endDate,
+				},
 			},
-		});
-	}
-
-	return { 
-		hostings,
-		totalCount
+		}),
 	};
-};
+  
+	totalCount = await prisma.hosting.count({
+		where: whereForCount,
+	});
+  
+	return {
+		hostings,
+		totalCount,
+	};
+}  
 
 export async function getHosting(slug: string) {
 	const hosting  = await prisma.hosting.findUnique({

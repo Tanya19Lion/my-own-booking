@@ -43,7 +43,7 @@ export default function Header() {
 									activePathname.toLowerCase() === route.path && (
 										<motion.div 
 											layoutId="nav-active" 
-											className="bg-accent h-1 w-full absolute bottom-[-25]"
+											className="bg-[#FF7205] h-1 w-full absolute bottom-[-25]"
 											initial={false}
 											animate={{ width: '100%' }}
 											transition={{ duration: 0.2 }}

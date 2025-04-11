@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
 import { getHosting } from "@/lib/utils";
 import { DollarSign, Pin, Users } from "lucide-react";
-import { Separator } from "@/components/ui";
+import { Separator } from "@/components/ui/separator";
 import OwnerAvatar from "@/components/owner-avatar";
 
 type HostingPageProps = {

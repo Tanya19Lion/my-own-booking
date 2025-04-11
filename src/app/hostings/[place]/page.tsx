@@ -16,9 +16,12 @@ type HostingsPageProps = Props & {
 	}
 };
 
-export default function HostingsPage({ params, searchParams }: HostingsPageProps) {
-	const place = capitalizePlaceName(params.place);
-	const page = searchParams.page ?? 1;
+export default async function HostingsPage({ params, searchParams }: HostingsPageProps) {
+	const place = await capitalizePlaceName(params.place);
+	const page = await searchParams.page ?? 1;
+	const maxGuests = searchParams.guests ? +searchParams.guests : 1;
+	const startDate = await searchParams.startDate ? new Date(searchParams.startDate as string) : undefined;
+	const endDate = await searchParams.endDate ? new Date(searchParams.endDate as string) : undefined;
 
 	return (
 		<main className="w-[100%] flex flex-col items-center pb-12 pt-28">
@@ -28,7 +31,7 @@ export default function HostingsPage({ params, searchParams }: HostingsPageProps
 			</H1>
 
 			<Suspense fallback={<Loading />}>
-				<HostingsList place={place} page={+page}/>
+				<HostingsList place={place} page={+page} maxGuests={maxGuests} startDate={startDate} endDate={endDate} />
 			</Suspense>
 		</main>
 	);

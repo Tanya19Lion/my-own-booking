@@ -1,6 +1,6 @@
 import { DollarSign, Pin, Users } from "lucide-react";
 import { Hosting } from "@prisma/client";
-import { Card } from "@/components/ui";
+import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "./hosting-details-card-images";
 import ListingFavouriteButton from "./hosting-favourite-button";
 // import UserAvatar from "./user-avatar";

@@ -5,7 +5,7 @@ import { useMemo } from "react";
 // import { RootState } from "@/store/state";
 // import { addFavouriteHosting, removeFavouriteHosting } from "@/store/Hostings/Hostings-slice";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type HostingFavouriteButtonProps = {

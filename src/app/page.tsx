@@ -2,25 +2,8 @@
 import Link from "next/link";
 import SearchForm from "@/components/search-form";
 import H1 from "@/components/h1";
-import { HostingsConfigFilters } from "@/lib/types";
 
 export default function Home() {
-	// const [filters, setFilters] = useState<HostingsConfigFilters>({
-	// 	dates: {
-	// 		from: undefined,
-	// 		to: undefined
-	// 	},
-	// 	guests: 1,
-	// 	search: ''
-	// });	
-	// const filteredOptions = useMemo(() => ({params: filters}), [filters]);
-
-	// const { data: { data: hostings } = {}, isError, isLoading } = useListingsQuery(filteredOptions);
-
-	// const handleFilters = useCallback((filters: HostingsConfigFilters) => {
-	// 	setFilters(filters);
-	// }, [setFilters]);
-
 	return (
 		<main className="flex flex-col items-center h-screen pt-36 px-3">
 			<H1>Find nice and cozy hosting to stay</H1>	

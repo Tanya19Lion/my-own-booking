@@ -4,6 +4,10 @@ import { OwnerEssential } from '@/lib/types';
 const prisma = new PrismaClient();
 
 async function main() {
+	await prisma.availability.deleteMany({});
+	await prisma.hosting.deleteMany({});
+	await prisma.owner.deleteMany({});
+
 	const numberOfHostings = 17;
 
 	const locations = [
@@ -174,9 +178,19 @@ async function main() {
 		}
 	];
 
-    await prisma.owner.createMany({
-		data: ownersData,
- 	});
+	for (const owner of ownersData) {
+		await prisma.owner.upsert({
+			where: { email: owner.email },
+			update: {}, 
+			create: owner,
+		});
+	}
+
+	const allOwners = await prisma.owner.findMany({
+		select: { id: true, email: true },
+	});
+
+	const emailToIdMap = Object.fromEntries(allOwners.map(o => [o.email, o.id]));
 
 	const images = [];
 	for (let i = 1; i <= 12; i++) {
@@ -204,15 +218,34 @@ async function main() {
 
 	const hostingsData: Prisma.HostingCreateManyInput[] = [];
 
+	function slugify(name: string) {
+		return name
+			.toLowerCase()
+			.replace(/[^\w\s-]/g, '')     // Remove special characters
+			.replace(/\s+/g, '-')         // Replace spaces with dashes
+			.replace(/--+/g, '-')         // Replace multiple dashes with one
+			.trim();
+	}
+
 	for (let i = 0; i < numberOfHostings; i++) {
-		const ownerId = (i % 7) + 1; 
+		const ownerEmail = ownersData[i % ownersData.length].email;
+		const ownerId = emailToIdMap[ownerEmail];
 		const location = locations[i % locations.length];
 		const description = getDescription(location);
-		const name = getHostingName(location); 
+		let name: string;
+		let slug: string;
+		const usedSlugs = new Set<string>();
+
+		do {
+			name = getHostingName(location);
+			slug = slugify(name);
+		} while (usedSlugs.has(slug));
+
+		usedSlugs.add(slug);
 		
 		hostingsData.push({
-			slug: `hosting-${i + 1}`,
-			name: name,
+			slug,
+			name,
 			description: description,
 			location: location,
 			images: JSON.stringify(arraysOfImages[i]), 
@@ -228,10 +261,6 @@ async function main() {
 		data: hostingsData,
 	});
 
-	await prisma.hosting.createMany({
-		data: hostingsData,
-	});
-
 	const createdHostings = await prisma.hosting.findMany({
 		where: {
 			id: {
@@ -241,8 +270,13 @@ async function main() {
 	});
 
 	const hostingsWithIds = await prisma.hosting.findMany({
-		where: { ownerId: { in: [1, 2, 3, 4, 5, 6, 7] } }, 
+		select: { id: true },  
 	});
+
+	if (hostingsWithIds.length === 0) {
+		console.error("No hostings found, skipping availability creation!");
+		return; 
+	}
 
 	const createdAvailabilitiesData = hostingsWithIds.map((hosting, i) => ({
 		from: new Date(),

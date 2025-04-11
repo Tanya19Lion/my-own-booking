@@ -8,7 +8,7 @@ export type HostingWithOwner = Hosting & {
 };
 
 
-export type HostingsConfigFilters = {
+export type HostingsSearchFilters = {
     dates?: {
         from: Date | undefined;
         to: Date | undefined;
