@@ -1,23 +1,37 @@
 "use server";
 
 import { redirect } from 'next/navigation';
+import { searchSchema } from '@/lib/validations';
 
 export async function searchHosting(formData: FormData) {
-    const city = formData.get('city') as string;
-    const guests = Number(formData.get('guests'));
-    const startDate = formData.get('startDate') as string;
-    const endDate = formData.get('endDate') as string;
-    
-    if (!city.trim() || !guests ) {
-        throw new Error('Missing search parameters');
-    }
+	const rawData = {
+		city: formData.get('city'),
+		guests: formData.get('guests'),
+		startDate: formData.get('startDate'),
+		endDate: formData.get('endDate'),
+	};
 
-    const searchParams = new URLSearchParams({
-        guests: guests.toString(),
-        city: city,
-        startDate: startDate,
-        endDate: endDate,
-    });
+	const parsed = searchSchema.safeParse(rawData);
+
+	if (!parsed.success) {
+		console.error(parsed.error.flatten());
+		throw new Error('Invalid input data');
+	}
+
+	const { city, guests, startDate, endDate } = parsed.data;
+
+    const searchParams = new URLSearchParams();
+
+    searchParams.set('city', city);
+    searchParams.set('guests', guests.toString());
     
-    redirect(`/hostings/${searchParams.get('city')}` + '?' + searchParams.toString());
+    if (startDate) {
+        searchParams.set('startDate', startDate);
+    }
+    
+    if (endDate) {
+        searchParams.set('endDate', endDate);
+    }
+    
+    redirect(`/hostings/${searchParams.get('city')?.toLowerCase()}` + '?' + searchParams.toString());
 }

@@ -16,28 +16,30 @@ type HostingsPageProps = Props & {
 	}
 };
 
-export default async function HostingsPage({ params, searchParams }: HostingsPageProps) {
-	const place = await capitalizePlaceName(params.place);
-	const page = await searchParams.page ?? 1;
+export default async function HostingsPage(props: Promise<HostingsPageProps>) {
+	const { params, searchParams } = await props;
+	const place = params.place;
+	const page = searchParams.page ?? 1;
 	const maxGuests = searchParams.guests ? +searchParams.guests : 1;
-	const startDate = await searchParams.startDate ? new Date(searchParams.startDate as string) : undefined;
-	const endDate = await searchParams.endDate ? new Date(searchParams.endDate as string) : undefined;
+	const startDate = searchParams.startDate ? new Date(searchParams.startDate as string) : undefined;
+	const endDate = searchParams.endDate ? new Date(searchParams.endDate as string) : undefined;
 
 	return (
 		<main className="w-[100%] flex flex-col items-center pb-12 pt-28">
 			<H1 className="text-center px-3 mb-16">
-				{place === 'All' && 'All hostings'}
-				{place !== 'All' && `Hostings in ${place}`}
+				{place === 'all' && 'All hostings'}
+				{place !== 'all' && `Hostings in ${capitalizePlaceName(place)}`}
 			</H1>
 
-			<Suspense fallback={<Loading />}>
+			<Suspense fallback={<Loading />} key={place + page}>
 				<HostingsList place={place} page={+page} maxGuests={maxGuests} startDate={startDate} endDate={endDate} />
 			</Suspense>
 		</main>
 	);
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Promise<Props>): Promise<Metadata> {
+	const { params } = await props;
 	const { place } = params;
 
 	return {	

@@ -18,7 +18,7 @@ export default function Home() {
 				<p>Popular cities: </p>
 				<div className="space-x-2 font-semibold">
 					<Link href="/hostings/kyiv">Kyiv</Link>
-					<Link href="/hostings/London">London</Link>
+					<Link href="/hostings/london">London</Link>
 					<Link href="/hostings/barcelona">Barcelona</Link>
 				</div>
 			</section>

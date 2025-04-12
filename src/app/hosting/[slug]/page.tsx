@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
-import { getHosting } from "@/lib/utils";
+import { getHosting } from "@/lib/server-utils";
 import { DollarSign, Pin, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import OwnerAvatar from "@/components/owner-avatar";
@@ -68,7 +68,8 @@ export default async function HostingPage({ params }: HostingPageProps) {
 	)
 }
 
-export async function generateMetadata({ params }: HostingPageProps): Promise<Metadata> {
+export async function generateMetadata(props: Promise<HostingPageProps>): Promise<Metadata> {
+	const { params } = await props;
 	const { slug } = params;
 	const hosting = await getHosting(slug);
 

@@ -4,10 +4,6 @@ import { OwnerEssential } from '@/lib/types';
 const prisma = new PrismaClient();
 
 async function main() {
-	await prisma.availability.deleteMany({});
-	await prisma.hosting.deleteMany({});
-	await prisma.owner.deleteMany({});
-
 	const numberOfHostings = 17;
 
 	const locations = [
@@ -18,7 +14,6 @@ async function main() {
 		'Tokyo',
 		'Berlin',
 		'Sydney',
-		'San Francisco',
 		'Rome',
 		'Barcelona',
 	];
