@@ -9,7 +9,7 @@ export default function Home() {
 			<H1>Find nice and cozy hosting to stay</H1>	
 					
 			<p className="mb-12 mt-7 text-2xl lg:text-3xl opacity-75">
-				Browse more than <span className="font-bold italic underline text-accent">8.000 hostings</span> for you
+				Browse more than <span className="font-bold text-accent">8.000 hostings</span> for you
 			</p>
 			
 			<SearchForm />			

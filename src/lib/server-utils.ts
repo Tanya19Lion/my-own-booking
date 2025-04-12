@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
-import { capitalizePlaceName } from "./utils";
+import { clearAndCapitalizeCity } from "./utils";
 import { searchSchema } from "@/lib/validations";
 
 const prisma = new PrismaClient();
@@ -17,11 +17,13 @@ export async function getHostings(rawParams: unknown) {
 
 	const shouldFilterByAvailability = !!startDateObj && !!endDateObj;
 
+    const normalizedCity = clearAndCapitalizeCity(decodeURIComponent(city));
+
 	const hostings = await prisma.hosting.findMany({
 		where: {
 			location: city === 'all' ? undefined : {
-				contains: capitalizePlaceName(city),		
-			},
+				contains: normalizedCity,	
+    		},
 			maxGuests: {
 				gte: guests,
 			},
@@ -55,7 +57,7 @@ export async function getHostings(rawParams: unknown) {
   
 	const whereForCount = {
 		location: city === 'all' ? undefined : {
-			contains: capitalizePlaceName(city),
+			contains: normalizedCity,
 		},
 		maxGuests: {
 			gte: guests,

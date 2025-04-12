@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { searchSchema } from '@/lib/validations';
+import { clearAndCapitalizeCity } from '@/lib/utils';
 
 export async function searchHosting(formData: FormData) {
 	const rawData = {
@@ -19,6 +20,7 @@ export async function searchHosting(formData: FormData) {
 	}
 
 	const { city, guests, startDate, endDate } = parsed.data;
+    const normalizedCity = clearAndCapitalizeCity(city);
 
     const searchParams = new URLSearchParams();
 
@@ -33,5 +35,5 @@ export async function searchHosting(formData: FormData) {
         searchParams.set('endDate', endDate);
     }
     
-    redirect(`/hostings/${searchParams.get('city')?.toLowerCase()}` + '?' + searchParams.toString());
+    redirect(`/hostings/${encodeURIComponent(normalizedCity)}` + '?' + searchParams.toString());
 }
