@@ -5,6 +5,7 @@ import { getHosting } from "@/lib/server-utils";
 import { DollarSign, Pin, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import OwnerAvatar from "@/components/owner-avatar";
+import FavouriteHostingsButton from "@/components/favourite-hostings-button";
 
 type HostingPageProps = {
 	params: {
@@ -52,10 +53,10 @@ export default async function HostingPage({ params }: HostingPageProps) {
 						</div>
 					</div>
 
-					{/* <div>
-						<ListingRatingStars listing={listing} className="mr-2 bg-transparent px-0 py-0" />
-						<ListingFavouriteButton id={id} />
-					</div> */}
+					<div>
+						{/* <ListingRatingStars listing={listing} className="mr-2 bg-transparent px-0 py-0" /> */}
+						<FavouriteHostingsButton id={id} className="heart-color"/>
+					</div>
 				</div>
 
 				<Separator className="my-4"/>

@@ -17,7 +17,7 @@ const routes = [
 	},
 	{
 		name: 'Favorites',
-		path: '/hostings/favorites'
+		path: '/favourites'
 	}
 ];
 

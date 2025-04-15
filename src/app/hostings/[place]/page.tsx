@@ -28,8 +28,9 @@ export default async function HostingsPage(props: Promise<HostingsPageProps>) {
 	return (
 		<main className="w-[100%] flex flex-col items-center pb-12 pt-28">
 			<H1 className="text-center px-3 mb-16">
+				{place === 'favorites' && 'Your favourite hostings'}
 				{place === 'all' && 'All hostings'}
-				{place !== 'all' && `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(place))}`}
+				{place !== 'all' && place !== 'favorites' && `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(place))}`}
 			</H1>
 
 			<Suspense fallback={<Loading />} key={place + page}>

@@ -9,14 +9,16 @@ import HostingCardImages from './hosting-card-images';
 import OwnerAvatar from './owner-avatar';
 import { Separator } from '@/components/ui/separator';
 import { HostingWithOwner } from "@/lib/types";
+import FavouriteHostingsButton from "./favourite-hostings-button";
 
 type HostingCardProps = {
 	hosting: HostingWithOwner;
+	onFavouriteChange?: () => void;
 };
 
 const MotionLink = motion(Link);
 
-export default function HostingCard({ hosting }: HostingCardProps) {
+export default function HostingCard({ hosting, onFavouriteChange }: HostingCardProps) {
 	const ref = useRef(null);
 	const { scrollYProgress } = useScroll({
 		target: ref,
@@ -46,8 +48,8 @@ export default function HostingCard({ hosting }: HostingCardProps) {
 			>
 				<div className="relative ">
 					<HostingCardImages hosting={hosting} />
-					{/* <ListingFavouriteButton id={id} className="absolute top-4 right-4 z-10"/>				
-					<ListingRatingStars listing={listing} className="absolute bottom-4 left-4 z-10"/> */}
+					<FavouriteHostingsButton id={id} className="absolute top-4 right-4 z-10 border-slate-950" onChange={onFavouriteChange} />				
+				{/* 	<ListingRatingStars listing={listing} className="absolute bottom-4 left-4 z-10"/> */}
 				</div>	
 				<CardContent className="flex flex-col flex-1 items-start gap-y-2">					
 					<h2 className="mb-2 mt-6 text-xl font-semibold color-white">{name}</h2>

@@ -37,3 +37,11 @@ export async function searchHosting(formData: FormData) {
     
     redirect(`/hostings/${encodeURIComponent(normalizedCity)}` + '?' + searchParams.toString());
 }
+
+import { getHostingsByIds } from '@/lib/server-utils';
+
+export async function fetchFavouritesByIds(ids: number[]) {
+    if (!Array.isArray(ids) || ids.length === 0) return [];
+    const hostings = await getHostingsByIds(ids);
+    return hostings;
+}

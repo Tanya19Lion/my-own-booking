@@ -1,11 +1,14 @@
+import "server-only";
+
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { clearAndCapitalizeCity } from "./utils";
 import { searchSchema } from "@/lib/validations";
+import { unstable_cache } from "next/cache";
 
 const prisma = new PrismaClient();
 
-export async function getHostings(rawParams: unknown) {
+export const getHostings = unstable_cache( async (rawParams: unknown) => {
 	const result = searchSchema.safeParse(rawParams);
 	if (!result.success) {
 		throw new Error("Invalid search parameters");
@@ -82,9 +85,40 @@ export async function getHostings(rawParams: unknown) {
 		hostings,
 		totalCount,
 	};
-}  
+});  
 
-export async function getHosting(slug: string) {
+export const getHostingsByIds = unstable_cache(async (ids: number[]) => {
+	if (!ids || ids.length === 0) {
+		return [];
+	}
+
+	const hostings = await prisma.hosting.findMany({
+		where: {
+			id: {
+				in: ids,
+			},
+		},
+		include: {
+			owner: {
+				select: {
+					email: true,
+					firstName: true,
+					lastName: true,
+					bio: true,
+					avatarUrl: true,
+				},
+			},
+		},
+	});
+
+	if (!hostings) {
+		return notFound();
+	}
+
+	return hostings;
+});
+
+export const getHosting = unstable_cache(async (slug: string) => {
 	const hosting  = await prisma.hosting.findUnique({
 		where: {
 			slug	
@@ -107,4 +141,4 @@ export async function getHosting(slug: string) {
 	}
 
 	return hosting;
-};
+});
