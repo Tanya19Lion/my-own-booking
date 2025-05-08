@@ -103,7 +103,7 @@ async function main() {
 		return `${adjective} ${propertyType} in ${location}`;
 	};
 
-	const ownersData: OwnerEssential[] = [
+	const ownersData = [
 		{
 			avatarUrl: 'https://i.pravatar.cc/150?img=32',
 			bio: `Hello, I am Emily, your friendly host. I have been hosting for over 5 years and I absolutely love it. Meeting new people and making their stay comfortable and memorable is my passion.

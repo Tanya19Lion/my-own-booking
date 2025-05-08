@@ -50,7 +50,7 @@ export default function FavouriteHostingsButton({ id, className, onChange }: Fav
 			className={cn("border", className)} 
 			variant="secondary" 
 		>
-			<Heart size={24} className={cn("transition", {"text-slate-950": !isFavourite, "fill-red-500 text-red-500": isFavourite})} />
+			<Heart size={24} className={cn("transition", {"text-slate-950": !isFavourite, "fill-[#FF7205] text-[#FF7205]": isFavourite})} />
 		</Button>
 	);
 }

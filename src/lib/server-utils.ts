@@ -8,6 +8,16 @@ import { unstable_cache } from "next/cache";
 
 const prisma = new PrismaClient();
 
+// const passwords = [
+// 	hello@demo.com "helloworld", $2b$10$M6hHJWqb/gvU/u09YirT9uN3egjd1vQhtQD6EdduagTHiJ1h1bQRi
+// 	sarah@demo.com "password123", $2b$10$gfpouFLCsmPOehfI8A0YRODxKq8w5r/kyx9mduAZ67usQjGBy27.y
+// 	mark@demo.com "securepassword", $2b$10$6sgduNlNUKph0qLyN4lwEOuWPa2nZEHPWXkyzSus0PcZ/8PIDDjEi
+// 	jessica@demo.com "guestpass", $2b$10$F8hJuBq931405hn.E9Lxw.803Assjbn6dnWlN4.CDrTqWu5Lkgy/a
+// 	tom@demo.com "simplepassword", $2b$10$pQokb4y6xQM5I8kcQ3Mx.eHpgEKww5DiY6YdBG0quclSNpCd6AF8S
+// 	olivia@demo.com "anothersecurepassword", $2b$10$OK/3/qWOyM7IpQ1OO0CPBu6uOk0mMc25YzRuHuVtFdCVYsOIlEVYu
+// 	ethan@demo.com"yetanotherpassword", $2b$10$KZ5nn33eNoRR4qney3I8OeZ/mHnUsCn0QCf8aLwkCp1iSAfcVKUM.
+//   ];
+
 export const getHostings = unstable_cache( async (rawParams: unknown) => {
 	const result = searchSchema.safeParse(rawParams);
 	if (!result.success) {

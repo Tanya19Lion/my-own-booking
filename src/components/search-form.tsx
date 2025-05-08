@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { searchHosting } from '@/actions/actions';
-import { format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { searchHosting } from '@/actions/actions';
 import { cn } from '@/lib/utils';
 import { DayPicker } from "react-day-picker";
 
@@ -41,6 +42,7 @@ type SearchGuestsProps = {
 const SearchInput = () => {
 	return (
 		<div>
+			<Label htmlFor="city" className="sr-only"></Label>
 			<Input name="city" id="city" placeholder="Enter city name..." required />
 		</div>
 	);
@@ -96,7 +98,7 @@ const SearchDates = ({ startDate, setStartDate, endDate, setEndDate }: SearchDat
 };
 const SearchGuests = ({ guests, setGuests }: SearchGuestsProps) => {
 	return (
-		<div className="h-9 min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs  outline-none flex items-center justify-between ">
+		<div className="h-9 min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs outline-none flex items-center justify-between">
 			<div className="flex items-center space-x-4">
 				<Button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className='bg-transparent hover:bg-transparent'>-</Button>
 				<span>{guests}</span>
@@ -108,6 +110,8 @@ const SearchGuests = ({ guests, setGuests }: SearchGuestsProps) => {
 };
 const SearchButton = () => {
 	return (
-		<div><Button type="submit" className='border-1 border-color-foreground'>Search</Button></div>
+		<div>
+			<Button type="submit" className="common-btn hover:bg-accent focus:bg-accent active:bg-accent">Search</Button>			
+		</div>
 	);
 };

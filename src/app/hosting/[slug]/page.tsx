@@ -54,7 +54,6 @@ export default async function HostingPage({ params }: HostingPageProps) {
 					</div>
 
 					<div>
-						{/* <ListingRatingStars listing={listing} className="mr-2 bg-transparent px-0 py-0" /> */}
 						<FavouriteHostingsButton id={id} className="heart-color"/>
 					</div>
 				</div>
@@ -66,7 +65,7 @@ export default async function HostingPage({ params }: HostingPageProps) {
 				<p className="mt-5">Contacts: <strong>{owner.email}</strong></p>
 			</Card>
 		</main>	
-	)
+	);
 }
 
 export async function generateMetadata(props: Promise<HostingPageProps>): Promise<Metadata> {

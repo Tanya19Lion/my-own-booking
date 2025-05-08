@@ -145,6 +145,20 @@
   .state-effects {
     @apply hover:scale-103 focus:scale-103 transition duration-500;
   }
+
+  .common-btn {
+    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md p-2 transition duration-200;  
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
 }
 
 /*-----------------------DATE PICKER-----------------------*/
@@ -571,3 +585,4 @@
   animation: rdp-fade_out var(--rdp-animation_duration)
     var(--rdp-animation_timing) forwards;
 }
+

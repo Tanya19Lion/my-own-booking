@@ -49,7 +49,6 @@ export default function HostingCard({ hosting, onFavouriteChange }: HostingCardP
 				<div className="relative ">
 					<HostingCardImages hosting={hosting} />
 					<FavouriteHostingsButton id={id} className="absolute top-4 right-4 z-10 border-slate-950" onChange={onFavouriteChange} />				
-				{/* 	<ListingRatingStars listing={listing} className="absolute bottom-4 left-4 z-10"/> */}
 				</div>	
 				<CardContent className="flex flex-col flex-1 items-start gap-y-2">					
 					<h2 className="mb-2 mt-6 text-xl font-semibold color-white">{name}</h2>

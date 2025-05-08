@@ -22,7 +22,7 @@ export default function Error({ error, reset }: ErrorProps) {
 				<span>Sorry, something went wrong</span>
 				<span><FrownIcon size={40} /></span>
 			</H1>
-			<Button	onClick={reset} >
+			<Button	onClick={reset} className="common-btn hover:bg-accent focus:bg-accent active:bg-accent">
 				Try again
 			</Button>
 		</main>
