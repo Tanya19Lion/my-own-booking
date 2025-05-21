@@ -1,15 +1,23 @@
+import { OwnerDataProvider } from "@/context/owner-context";
+import { getOwner, getHostingsByOwner } from "@/lib/server-utils";
 import { Toaster } from "@/components/ui/sonner";
 
-type AuthLayoutProps = {
-    children: React.ReactNode;  
+export const dynamic = 'force-dynamic'; 
+
+type OwnerLayoutProps = {
+    children: React.ReactNode;
 };
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+export default async function OwnerLayout({ children }: OwnerLayoutProps) {
+    const owner = await getOwner();
+    const hostings = await getHostingsByOwner(owner.id);
+
     return (
         <>
-            <main className="flex flex-col items-center justify-center mt-auto w-full gap-y-12" >
+            <OwnerDataProvider owner={owner} hostings={hostings}>
                 {children}
-            </main>
+            </OwnerDataProvider>
+
             <Toaster
                 position="bottom-right"
                 toastOptions={{

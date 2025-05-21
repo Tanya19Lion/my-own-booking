@@ -147,7 +147,7 @@
   }
 
   .common-btn {
-    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md p-2 transition duration-200;  
+    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md py-2 px-4 transition duration-200;  
   }
 }
 

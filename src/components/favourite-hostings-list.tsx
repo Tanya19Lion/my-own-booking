@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import H2 from "./h2";
 import HostingCard from './hosting-card';
 import { HostingWithOwner } from "@/lib/types";
-import { fetchFavouritesByIds } from "@/actions/actions";
+import { fetchFavouritesByIds } from "@/actions/hosting-actions";
 
 export const LOCAL_STORAGE_KEY = "favouriteHostings";
 

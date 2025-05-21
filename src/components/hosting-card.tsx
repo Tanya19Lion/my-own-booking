@@ -2,53 +2,61 @@
 
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { DollarSign, Pin, Users } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { DollarSign, Pencil, Pin, Trash2, Users } from "lucide-react";
 import { useRef } from "react";
+import HostingButton from "./hosting-button";
 import HostingCardImages from './hosting-card-images';
 import OwnerAvatar from './owner-avatar';
 import { Separator } from '@/components/ui/separator';
 import { HostingWithOwner } from "@/lib/types";
 import FavouriteHostingsButton from "./favourite-hostings-button";
+import { usePathname } from "next/navigation";
+import { useTransition } from "react";
+import { deleteHosting } from "@/actions/hosting-actions";
 
 type HostingCardProps = {
 	hosting: HostingWithOwner;
 	onFavouriteChange?: () => void;
 };
 
-const MotionLink = motion(Link);
-
 export default function HostingCard({ hosting, onFavouriteChange }: HostingCardProps) {
+	const [isPending, startTransition] = useTransition();
+	const activePathname = usePathname();
 	const ref = useRef(null);
-	const { scrollYProgress } = useScroll({
-		target: ref,
-		offset: ["0 1", "1.5 1"],
-	});
-	const scaleProgress = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-	const opacityProgress = useTransform(scrollYProgress, [0, 1], [0.3, 1]);
 
-	const { id, name, slug, location, price, maxGuests, owner } = hosting;
+	const { id, name, slug, location, price, maxGuests, description, owner } = hosting;
 
 	return (
-		<MotionLink
+		<Link
 			ref={ref} 
 			href="/hosting/[slug]" as={`/hosting/${slug}`}
 			className="flex-1 basis-80 max-w-[500px] w-[100%] state-effects"
-			style={{
-				//@ts-ignore
-				scale: scaleProgress,
-				//@ts-ignore
-				opacity: opacityProgress,				
-			}}
-			initial={{ scale: 0.8, opacity: 0 }}
 		>
 			<Card 
 				className="w-full h-full min-h-[380px] flex flex-col justify-between bg-white/[3%] rounded-xl overflow-hidden relative transition pb-6" 
 				key={id}
 			>
 				<div className="relative ">
-					<HostingCardImages hosting={hosting} />
-					<FavouriteHostingsButton id={id} className="absolute top-4 right-4 z-10 border-slate-950" onChange={onFavouriteChange} />				
+					{/* <HostingCardImages hosting={hosting} /> */}
+					{
+						!activePathname.includes("owner") && (<FavouriteHostingsButton 
+																id={id} 
+																className="absolute top-4 right-4 z-10 border-slate-950" 
+																onChange={onFavouriteChange} 
+															/>)
+					}	
+					{
+						activePathname.includes("owner") && (
+							<div className="absolute top-4 right-4 z-10 flex gap-2">
+								<HostingButton actionType='edit' hosting={hosting}>
+									<Pencil size={24} />
+								</HostingButton> 
+								<HostingButton actionType='delete' disabled={isPending}	onClick={async () => startTransition(async () => { await deleteHosting(+hosting.id); })}>
+									<Trash2 size={24} />
+								</HostingButton>
+							</div>
+						)
+					}			
 				</div>	
 				<CardContent className="flex flex-col flex-1 items-start gap-y-2">					
 					<h2 className="mb-2 mt-6 text-xl font-semibold color-white">{name}</h2>
@@ -67,13 +75,24 @@ export default function HostingCard({ hosting, onFavouriteChange }: HostingCardP
 						<Users className="h-4 w-4 text-foreground" />
 						<span className="text-muted-foreground">{maxGuests} guests</span>
 					</div>	
-
-					<div className="mt-auto w-full">				
-						<Separator className="mb-3 mt-3" />	
-						{owner && <OwnerAvatar owner={owner} className="w-10 h-10"/>}		
-					</div>
+					{	
+						activePathname.includes("owner") && (
+							<>
+								<Separator className="my-4"/>
+								<p className="text-muted-foreground text-sm">{description}</p>
+							</>
+						)
+					}
+					{
+						!activePathname.includes("owner") && (
+							<div className="mt-auto w-full">				
+								<Separator className="mb-3 mt-3" />	
+								{owner && <OwnerAvatar owner={owner} className="w-10 h-10"/>}		
+							</div>
+						)
+					}					
 				</CardContent>									
 			</Card>	
-		</MotionLink>
+		</Link>
 	)
 }

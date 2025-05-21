@@ -2,9 +2,14 @@ import { Hosting, Owner, Availability } from '@prisma/client';
 
 export type OwnerEssential = Omit<Owner, 'id' | 'password' | 'createdAt' | 'updatedAt'>;
 export type HostingEssential = Omit<Hosting, 'id' | 'createdAt' | 'updatedAt'>;
-export type AvailabilityEssential = Omit<Availability, 'id' | 'createdAt' | 'updatedAt'>;
+export type AvailabilityEssential = Pick<Availability, 'from' | 'to'>;
+
 export type HostingWithOwner = Hosting & { 
-    owner: OwnerEssential 
+    owner: OwnerEssential,
+    availability?: AvailabilityEssential; 
+};
+export type OwnerWithHostings = Owner & {
+    hostings: Hosting[];
 };
 
 

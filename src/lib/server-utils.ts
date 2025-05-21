@@ -1,12 +1,13 @@
 import "server-only";
 
-import { PrismaClient } from "@prisma/client";
-import { notFound } from "next/navigation";
+import { Owner } from "@prisma/client";
+import { notFound, redirect } from "next/navigation";
 import { clearAndCapitalizeCity } from "./utils";
-import { searchSchema } from "@/lib/validations";
+import { searchFormSchema } from "@/lib/validations";
 import { unstable_cache } from "next/cache";
-
-const prisma = new PrismaClient();
+import { auth } from "./auth";
+import { HostingWithOwner } from "./types";
+import { prisma } from "@/lib/prisma";
 
 // const passwords = [
 // 	hello@demo.com "helloworld", $2b$10$M6hHJWqb/gvU/u09YirT9uN3egjd1vQhtQD6EdduagTHiJ1h1bQRi
@@ -18,12 +19,22 @@ const prisma = new PrismaClient();
 // 	ethan@demo.com"yetanotherpassword", $2b$10$KZ5nn33eNoRR4qney3I8OeZ/mHnUsCn0QCf8aLwkCp1iSAfcVKUM.
 //   ];
 
+export const checkAuth = async () => {
+	const session = await auth();
+
+	if (!session?.user) {
+		redirect('/login');
+	};
+
+	return session;
+};
+
 export const getHostings = unstable_cache( async (rawParams: unknown) => {
-	const result = searchSchema.safeParse(rawParams);
+	const result = searchFormSchema.safeParse(rawParams);
 	if (!result.success) {
 		throw new Error("Invalid search parameters");
 	}
-	const { city, guests, page = 1, startDate, endDate } = result.data;
+	const { city, guests, startDate, endDate, page } = result.data;
 
 	const startDateObj = startDate ? new Date(startDate) : undefined;
 	const endDateObj = endDate ? new Date(endDate) : undefined;
@@ -61,9 +72,15 @@ export const getHostings = unstable_cache( async (rawParams: unknown) => {
 					avatarUrl: true,
 				},
 			},
+			availability: {
+				select: {
+					from: true,
+					to: true,
+				},
+			}
 		},
-	  	take: 6,
-	  	skip: (page - 1) * 6,
+		take: 6,
+		skip: ((page ?? 1) - 1) * 6,
 	});
   
 	let totalCount = 0;
@@ -95,7 +112,12 @@ export const getHostings = unstable_cache( async (rawParams: unknown) => {
 		hostings,
 		totalCount,
 	};
-});  
+},
+['get-hostings'], 
+{
+    tags: ['get-hostings']
+}
+);  
 
 export const getHostingsByIds = unstable_cache(async (ids: number[]) => {
 	if (!ids || ids.length === 0) {
@@ -152,3 +174,47 @@ export const getHosting = unstable_cache(async (slug: string) => {
 
 	return hosting;
 });
+
+export const getOwner = async (): Promise<Owner> =>  {
+	const session = await checkAuth();
+	
+	const ownerEmail = session?.user?.email;
+	if (!ownerEmail) {
+		redirect("/login");
+	};
+
+	const owner = await prisma.owner.findUnique({
+		where: {
+			email: ownerEmail,
+		},
+	});
+	if (!owner) {
+		redirect("/login");
+	};
+
+	return owner;
+};
+
+export const getHostingsByOwner = async (ownerId: number): Promise<HostingWithOwner[]> =>  {
+	const hostings = await prisma.hosting.findMany({
+		where: {
+			ownerId: ownerId,
+		},
+		include: {
+			owner: {
+				select: {
+					email: true,
+					firstName: true,
+					lastName: true,
+					bio: true,
+					avatarUrl: true,
+				}
+			},
+		}
+	});
+
+	if (!hostings) {
+		return notFound();
+	}
+	return hostings;
+};
