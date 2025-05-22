@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                 {children}
             </main>
             <Toaster
-                position="bottom-right"
+                position="top-right"
                 toastOptions={{
                     className: 'bg-slate-950 text-white border-1 border-white',
                     duration: 5000,

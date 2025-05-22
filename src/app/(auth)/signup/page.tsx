@@ -5,7 +5,7 @@ import SignUpForm from "@/components/signup-form";
 
 export default async function SignUpPage() {
     return (
-        <main className="">  
+        <main className="pt-8 pb-8">  
             <H1 className="text-center mb-12">Sign Up</H1>           
             
             <SignUpForm />

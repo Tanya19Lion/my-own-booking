@@ -15,47 +15,13 @@ export const logInSchema = z.object({
 });
 export type LogInSchema = z.infer<typeof logInSchema>;
 
-// export const signUpSchema = z.object({
-// 	firstName: z.string().min(1, { message: "First name is required" }),
-// 	lastName: z.string().min(1, { message: "Last name is required" }),
-// 	bio: z.string().min(10, { message: "Your personal information should be at least 10 characters" }),
-// 	photo: z.union([z.literal(''), z.string().trim().url("Image must be a valid URL")]),
-// 	email: z.string().email({ message: "Please enter a valid email address" }),
-// 	password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-// }).transform((data) => ({
-// 	...data,
-// 	photo: data.photo === '' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(data.firstName + " " + data.lastName)}&background=random&size=128` : data.photo,
-// }));
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
 export const signUpSchema = z.object({
 	firstName: z.string().min(1, "First name is required"),
 	lastName: z.string().min(1, "Last name is required"),
 	bio: z.string().min(10, "Your story should be at least 10 characters long").max(500, "Your story cannot be longer than 500 characters"),
 	email: z.string().email("Invalid email address"),
-	password: z.string().min(8, "Password must be at least 8 characters long"),
-	photo: z.union([z.literal(''), z.string().trim().url("Image must be a valid URL")])
-	// z
-	// 	.union([z.instanceof(File), z.undefined(), z.null()])
-	// 	.refine(
-	// 		(file) => {
-	// 			if (!file || !(file instanceof File) || file.size === 0) return true;
-
-	// 			return (
-	// 			ALLOWED_IMAGE_TYPES.includes(file.type) && file.size <= MAX_FILE_SIZE
-	// 			);
-	// 		},
-	// 		{
-	// 			message: "Photo must be an image (jpg/png/webp) and less than 5MB",
-	// 		}
-    // 	),
+	password: z.string().min(8, "Password must be at least 8 characters long"),	
 });
-// .transform((data) => ({
-// 	...data,
-// 	photo: data.photo === '' ? `https://ui-avatars.com/api/?name=${encodeURIComponent(data.firstName + " " + data.lastName)}&background=random&size=128` : data.photo,
-// }));
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 
 export const hostingFormSchema = z.object({

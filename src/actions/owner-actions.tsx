@@ -7,13 +7,14 @@ import { prisma } from "@/lib/prisma";
 import { logInSchema, signUpSchema } from "@/lib/validations";
 import { Prisma } from '@prisma/client';
 import { AuthError } from 'next-auth';
+import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 
 export async function logIn(authData: unknown) {
     const validatedAuthData = logInSchema.safeParse(authData);
     if (!validatedAuthData.success) {
         console.error("Invalid login data");
         return {
-            message: "Invalid login data. Please try again.",
+            message: "Invalid login data. Please check your inputs and try again.",
         };
     }
 
@@ -25,13 +26,13 @@ export async function logIn(authData: unknown) {
                 case "CredentialsSignin": {
                     console.error("Invalid credentials");
                     return {
-                        message: "Email or password is incorrect. Please try again.",
+                        message: "Email or password is incorrect. Please check your inputs and try again.",
                     };
                 }
                 default: {
                     console.error("An unknown error occurred during sign in");
                     return {
-                        message: "An unknown error occurred during sign in. Please try again.",
+                        message: "An unknown error occurred during sign in. Please check your inputs and try again.",
                     };
                 }
             }
@@ -44,26 +45,43 @@ export async function logOut() {
     await signOut({ redirectTo: '/' });
 }
 
-export async function signUp(formData: unknown) {
-    const validatedFormData = signUpSchema.safeParse(formData);
+export async function signUp(formData: FormData) {   
+    const rawData = {
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        bio: formData.get("bio"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+    };
+
+    const validatedFormData = signUpSchema.safeParse(rawData);
     if (!validatedFormData.success) {
-        console.error("Invalid sign up data");
-        return {
-            error: "Invalid sign up data. Please try again.",
-        };
+        return { error: "Invalid sign up data. Please check your inputs and try again." };
     }
 
     try {
         const password = validatedFormData.data.password;
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        const photo = validatedFormData.data.photo as unknown as File;
-
+        
+        const photo = formData.get("photo");
+        const file = photo instanceof File && photo.size > 0 ? photo : null;
         let photoUrl = "";
 
         try {
-            if (photo && photo.size > 0) {
-                const arrayBuffer = await photo.arrayBuffer();
+            if (file && file.size > 0) {
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                    return {
+                        message: "Invalid file type. Only JPG, PNG, and WEBP are allowed.",
+                    };
+                }
+
+                if (file.size > MAX_FILE_SIZE) {
+                    return {
+                        message: "File size exceeds the 5MB limit.",
+                    };
+                }
+
+                const arrayBuffer = await file.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
 
                 const result = await new Promise<string>((resolve, reject) => {
@@ -86,7 +104,9 @@ export async function signUp(formData: unknown) {
         }
         catch (error) {
             console.error("Photo upload failed: ", error);
-            throw new Error("Photo upload failed. Please try again.");
+            return {
+                message: "Photo upload failed. Please check your data and try again."
+            };
         }
 
         try {
@@ -104,7 +124,7 @@ export async function signUp(formData: unknown) {
             if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
                 console.error("Email already exists: ", error);
                 return {
-                    error: "Email already exists. Please try again.",
+                    error: "Email already exists. Please try again with something else.",
                 };
             }
            
@@ -120,12 +140,14 @@ export async function signUp(formData: unknown) {
 
         await signIn('credentials', credentialsData);   
     } catch (error) {
-        // if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-        //     return {}; 
-        // }
-
         console.error("Sign up error: ", error);
-        // return { error: "Something went wrong. Please try again." };
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error.code === "P2002") {
+                return {
+                    error: "Email already exists. Please try again with something else.",
+                };
+            }
+        }
         throw error;
     }
 }
