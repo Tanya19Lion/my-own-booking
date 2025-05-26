@@ -4,11 +4,9 @@ import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { format } from 'date-fns';
+import StartDatePopover from './start-date-popover';
+import EndDatePopover from './end-date-popover';
 import { searchHosting } from '@/actions/hosting-actions';
-import { cn } from '@/lib/utils';
-import { DayPicker } from "react-day-picker";
 import { toast } from "sonner";
 import { useForm, FieldErrors, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,26 +17,31 @@ export default function SearchForm() {
 	const [startDate, setStartDate] = useState<Date | undefined>(new Date());
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
-	const { register, formState: {isSubmitting, errors}, trigger, getValues } = useForm<SearchFormSchema>({
+	const { register, handleSubmit, formState: {isSubmitting, errors} } = useForm<SearchFormSchema>({
 		resolver: zodResolver(searchFormSchema),
 	});
 
-	return (
-		<form action={async () => {
-			const result = await trigger();
-			if (!result) {
-				toast.error("Please fill in all required fields.");
-				return;
-			}
+	const onSubmit = async (data: SearchFormSchema) => {
+		const formData = new FormData();
 
-			const formData = getValues();
-			formData.startDate = startDate?.toISOString() || '';
-			formData.endDate = endDate?.toISOString() || '';
-			formData.guests = Number(guests);
-			
-			await searchHosting(formData);
-		}}  
-		 className="w-full flex justify-center gap-4">
+		formData.append("city", data.city);
+		if (startDate) {
+			formData.append("startDate", startDate.toISOString());
+		}
+		if (endDate) {
+			formData.append("endDate", endDate.toISOString());
+		}
+		formData.append("guests", data.guests.toString());
+
+		const error = await searchHosting(formData);
+		if (error) {
+			toast.error(error.message) || "Something went wrong.";
+			return;
+		}		
+	};	
+
+	return (
+		<form  onSubmit={handleSubmit(onSubmit)} className="w-full flex justify-center gap-4">
 			<SearchInput register={register} errors={errors}/>
 
 			<SearchDates 
@@ -65,7 +68,14 @@ const SearchInput = ({ register, errors }: SearchInputProps) => {
 	return (
 		<div>
 			<Label htmlFor="city" className="sr-only"></Label>
-			<Input {...register('city')} id="city" placeholder="Enter city name..." required />
+			<Input 
+				{...register('city')} 
+				id="city" 
+				placeholder="Enter city name..." 				
+				pattern='^[A-Za-z\s]+$' 
+				title="City name should contain only letters and spaces."
+				required 
+			/>
 			{errors.city && <p className="text-red-500">{errors.city.message}</p>}
 		</div>
 	);
@@ -79,47 +89,20 @@ type SearchDatesProps = {
 	register: UseFormRegister<SearchFormSchema>;
     errors: FieldErrors<SearchFormSchema>;
 };
-const SearchDates = ({ startDate, setStartDate, endDate, setEndDate, register, errors }: SearchDatesProps) => {
+export const SearchDates = ({ startDate, setStartDate, endDate, setEndDate, register, errors }: SearchDatesProps) => {
 	return (
 		<div className="flex">
 			<div className="flex space-x-4">			
 				<div className="w-45">
-					<Popover>
-						<PopoverTrigger asChild>
-							<Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent", !startDate && "text-muted-foreground")}>
-								{startDate ? format(startDate, 'PPP') : 'Start Date'}
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent className="w-auto p-0">
-							<DayPicker
-								animate
-								mode="single"
-								selected={startDate}
-								onSelect={setStartDate}
-								showOutsideDays
-								disabled={(date) => date < new Date()}
-							/>				
-						</PopoverContent>
-					</Popover>
+					<StartDatePopover 
+						startDate={startDate} 
+						setStartDate={setStartDate} />
 				</div>
 				<div className="w-45">
-					<Popover>
-						<PopoverTrigger asChild>
-							<Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent", !endDate && "text-muted-foreground")}>
-								{endDate ? format(endDate, 'PPP') : 'End Date'}
-							</Button>
-						</PopoverTrigger>
-						<PopoverContent className="w-auto p-0">
-							<DayPicker
-								animate
-								mode="single"
-								selected={endDate}
-								onSelect={setEndDate}
-								showOutsideDays
-								disabled={(date) => date < (startDate ?? new Date()) || date < new Date()}
-							/>
-						</PopoverContent>
-					</Popover>
+					<EndDatePopover 
+						endDate={endDate} 
+						startDate={startDate}
+						setEndDate={setEndDate} />
 				</div>
 			</div>
 			{errors.startDate && <p className="text-red-500">{errors.startDate.message}</p>}
@@ -161,7 +144,7 @@ const SearchButton = ({ isSubmitting }: SearchButtonProps) => {
 				type="submit" 
 				className="common-btn hover:bg-accent focus:bg-accent active:bg-accent"
 				disabled={isSubmitting}
-			>Search</Button>			
+			>{isSubmitting ? 'Searching...' : 'Search'}</Button>			
 		</div>
 	);
 };

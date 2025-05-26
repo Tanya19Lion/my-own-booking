@@ -26,7 +26,7 @@ export default async function HostingsPage(props: Promise<HostingsPageProps>) {
 	const endDate = searchParams.endDate ? new Date(searchParams.endDate as string) : undefined;
 
 	return (
-		<main className="w-[100%] flex flex-col items-center pb-12 pt-28">
+		<main className="w-[100%] flex flex-col items-center pb-12 pt-28 px-3 sm:px-4">
 			<H1 className="text-center px-3 mb-16">
 				{place === 'favorites' && 'Your favourite hostings'}
 				{place === 'all' && 'All hostings'}

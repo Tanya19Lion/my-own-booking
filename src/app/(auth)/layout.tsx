@@ -17,8 +17,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                     duration: 5000,
                     style: {
                         backgroundColor: '#020618',
-                        border: '1px solid #fff',
-                        color: '#fff',
+                        border: '1px solid #ff7205',
+                        color: '#ff7205',
                     },
                 }}
             />

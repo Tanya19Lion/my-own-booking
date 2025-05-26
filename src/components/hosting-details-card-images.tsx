@@ -13,13 +13,16 @@ type HostingDetailsCardImagesProps = {
 export default function HostingDetailsCardImages({ hosting }: HostingDetailsCardImagesProps) {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);	
 
-	const imageArray = JSON.parse(hosting.images as string) as string[];
-
+	const imageArray: string[] = Array.isArray(hosting.images)
+		? hosting.images
+		: JSON.parse(hosting.images as string);
+console.log("Image array:", imageArray);
 	return (
         <>
 			<Image 
 				className="mb-4 h-[650px] rounded-md object-contain"
-				src={getImageUrl(imageArray[currentImageIndex])}
+				// src={imageArray[currentImageIndex].startsWith("http") ? imageArray[currentImageIndex] : getImageUrl(imageArray[currentImageIndex])}
+				src={imageArray[currentImageIndex]}
 				alt={hosting.name}
 				sizes="(max-width: 1280px) 100wv, 1280px" 
 				width={1280}	
@@ -35,7 +38,8 @@ export default function HostingDetailsCardImages({ hosting }: HostingDetailsCard
 							isSelected={index === currentImageIndex}
 						>
 							<Image 
-								src={getImageUrl(image)}  
+								// src={image.startsWith("http") ? image : getImageUrl(image)}  
+								src={image}
 								alt={`${hosting.name} Image ${index+1}`} 
 								className="w-[90%] h-52 object-cover shadow-sm rounded-md" 
 								width={480} 

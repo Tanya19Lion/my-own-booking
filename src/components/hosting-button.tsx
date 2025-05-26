@@ -22,7 +22,7 @@ function HostingButton({ children, actionType, disabled, onClick, hosting, class
 
     if (actionType === "delete") {
         return (
-            <Button variant="secondary" disabled={disabled} onClick={onClick} className="border-slate-950">
+            <Button variant="secondary" disabled={disabled} onClick={onClick} className={className}>
                 {children}
             </Button>           
         );
@@ -36,11 +36,11 @@ function HostingButton({ children, actionType, disabled, onClick, hosting, class
                         Add new hosting
                     </Button>
                     ) : (
-                    <Button variant="secondary" className="border-slate-950" disabled={pending}>{children}</Button>
+                    <Button variant="secondary" disabled={pending} className={className}>{children}</Button>
                 )}               
             </DialogTrigger>
 
-            <DialogContent className="text-black">
+            <DialogContent className="text-black max-h-screen sm:max-h-[80vh] overflow-y-auto">
                 <DialogHeader>                            
                     <DialogTitle>{actionType === 'add' ? 'Add a new hosting' : 'Edit hosting'}</DialogTitle>
                 </DialogHeader>

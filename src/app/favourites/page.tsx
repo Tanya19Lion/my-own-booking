@@ -6,7 +6,7 @@ import FavouriteHostingsList from "@/components/favourite-hostings-list";
 
 export default async function FavouriteHostingsPage() {
     return (
-        <main className="w-[100%] flex flex-col items-center pb-12 pt-28">
+        <main className="w-[100%] flex flex-col items-center pb-12 pt-28 px-3 sm:px-4">
             <H1 className="text-center px-3 mb-16">
                 All your favourite hostings
             </H1>

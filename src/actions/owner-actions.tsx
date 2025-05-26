@@ -45,7 +45,14 @@ export async function logOut() {
     await signOut({ redirectTo: '/' });
 }
 
-export async function signUp(formData: FormData) {   
+export async function signUp(formData: FormData) {        
+    if (!formData || !(formData instanceof FormData)) {
+        console.error('Invalid form data');
+        return {
+            message: "Invalid form data. Please try again.",
+        };
+    }
+
     const rawData = {
         firstName: formData.get("firstName"),
         lastName: formData.get("lastName"),
@@ -77,7 +84,7 @@ export async function signUp(formData: FormData) {
 
                 if (file.size > MAX_FILE_SIZE) {
                     return {
-                        message: "File size exceeds the 5MB limit.",
+                        message: `File size exceeds the 300KB limit.`,
                     };
                 }
 

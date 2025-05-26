@@ -6,6 +6,8 @@ import { clearAndCapitalizeCity } from '@/lib/utils';
 import { checkAuth, getHostingsByIds } from '@/lib/server-utils';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from "@/lib/prisma";
+import { ALLOWED_TYPES, MAX_FILE_SIZE } from '@/lib/constants';
+import cloudinary from "@/lib/cloudinary";
 
 export async function searchHosting(formData: unknown) {
     if (!formData || !(formData instanceof FormData)) {
@@ -75,16 +77,66 @@ export async function addNewHosting(formData: unknown) {
     const toDate = validatedHostingData.data.availableTo?.toString();
 
     const hostingData = {
-        ...validatedHostingData.data,
+        name: validatedHostingData.data.name,
+        description: validatedHostingData.data.description,
+        location: validatedHostingData.data.location,
+        price: validatedHostingData.data.price,
+        maxGuests: validatedHostingData.data.maxGuests,
         slug: typeof validatedHostingData.data.name === 'string' ? validatedHostingData.data.name.toLowerCase().replace(/\s+/g, '-') : '',
         guestFavorite: false,
         rating: Number((Math.random() * (5.0 - 2.5) + 2.5).toFixed(1)),
         ownerId: Number(session.user.id),
     };
 
+    const images = formData.getAll("images");
+    const validFiles = images.filter((img) => img instanceof File && img.size > 0) as File[];
+
+    if (validFiles.length === 0) {
+        return {
+            message: "At least one photo is required.",
+        };
+    }
+
+    const uploadedImageUrls: string[] = [];
+    
+    try {
+        for (const file of validFiles) {
+            if (!ALLOWED_TYPES.includes(file.type)) {
+                return { message: "Invalid file type." };
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                return { message: "A file exceeds the size limit." };
+            }
+
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const imageUrl = await new Promise<string>((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "hosting_photos" },
+                    (error, result) => {
+                        if (error || !result) return reject(error);
+                        resolve(result.secure_url);
+                    }
+                ).end(buffer);
+            });
+
+            uploadedImageUrls.push(imageUrl);
+        }  
+    }
+    catch (error) {
+        console.error("Photo upload failed: ", error);
+        return {
+            message: "Photo upload failed. Please check your data and try again."
+        };
+    }
+
     try {
         const hosting = await prisma.hosting.create({
-            data: hostingData,
+            data: {
+		        ...hostingData,
+                images: uploadedImageUrls,
+            },
         });
 
         await prisma.availability.create({
@@ -124,7 +176,7 @@ export async function editHosting(selectedHostingId: number, formData: unknown) 
 
     const hosting = await prisma.hosting.findUnique({
         where: {
-            id: Number(selectedHostingId),
+            id: +selectedHostingId,
         }
     });
     if (!hosting) {
@@ -152,24 +204,84 @@ export async function editHosting(selectedHostingId: number, formData: unknown) 
 	}
 
     const hostingData = {
-        ...validatedHostingData.data,
+        name: validatedHostingData.data.name,
+        description: validatedHostingData.data.description,
+        location: validatedHostingData.data.location,
+        price: validatedHostingData.data.price,
+        maxGuests: validatedHostingData.data.maxGuests,
         slug: typeof validatedHostingData.data.name === 'string' ? validatedHostingData.data.name.toLowerCase().replace(/\s+/g, '-') : '',
+        guestFavorite: false,
+        rating: Number((Math.random() * (5.0 - 2.5) + 2.5).toFixed(1)),
+        ownerId: Number(session.user.id),
     };
 
     const fromDate = validatedHostingData.data.availableFrom?.toString();
     const toDate = validatedHostingData.data.availableTo?.toString();
 
+    const existingImageUrlsRaw = formData.get("existingImages");
+    const existingImageUrls = existingImageUrlsRaw 
+        ? JSON.parse(existingImageUrlsRaw.toString()) 
+        : [];
+    
+    const images = formData.getAll("images");
+    const validFiles = images.filter((img) => img instanceof File && img.size > 0) as File[];
+
+    const uploadedImageUrls: string[] = [];
+    
+    try {
+        for (const file of validFiles) {
+            if (!ALLOWED_TYPES.includes(file.type)) {
+                return { message: "Invalid file type." };
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                return { message: "A file exceeds the size limit." };
+            }
+
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const imageUrl = await new Promise<string>((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "hosting_photos" },
+                    (error, result) => {
+                        if (error || !result) return reject(error);
+                        resolve(result.secure_url);
+                    }
+                ).end(buffer);
+            });
+
+            uploadedImageUrls.push(imageUrl);
+        }  
+    }
+    catch (error) {
+        console.error("Photo upload failed: ", error);
+        return {
+            message: "Photo upload failed. Please check your data and try again."
+        };
+    }
+
+    const allImageUrls = [...existingImageUrls, ...uploadedImageUrls];
+
+    if (allImageUrls.length === 0) {
+        return {
+            message: "At least one photo is required.",
+        };
+    }
+
     try {
         await prisma.hosting.update({
             where: {
-                id: Number(selectedHostingId),
+                id: +selectedHostingId,
             },
-            data: hostingData,
+            data: {
+                ...hostingData,
+                images: allImageUrls, 
+            },
         });
 
         await prisma.availability.update({
             where: {
-                hostingId: Number(selectedHostingId),
+                hostingId: +selectedHostingId,
             },
             data: {
                 from: fromDate ? new Date(fromDate) : null,
@@ -217,11 +329,16 @@ export async function deleteHosting(selectedHostingId: number) {
     }
     
     try {
-        await prisma.hosting.delete({
+        await prisma.availability.delete({
             where: {
-                id: Number(selectedHostingId),
+                hostingId: +selectedHostingId,
             },
         });
+        await prisma.hosting.delete({
+            where: {
+                id: +selectedHostingId,
+            },
+        });       
     } catch (error) {
         console.error('Error deleting hosting:', error);
         return {

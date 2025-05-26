@@ -14,7 +14,9 @@ type HostingCardImagesProps = {
 export default function HostingCardImages({ hosting, className }: HostingCardImagesProps) {
 	const [isHovered, setIsHovered] = useState(false);
 	
-	const imageArray = JSON.parse(hosting.images as string) as string[];
+	const imageArray: string[] = Array.isArray(hosting.images)
+		? hosting.images
+		: JSON.parse(hosting.images as string);
 
 	return (
 		<Carousel 
@@ -26,7 +28,8 @@ export default function HostingCardImages({ hosting, className }: HostingCardIma
 				{imageArray.map((image, index) => (
 					<CarouselItem key={image+index} className="pl-0 w-full h-[60%]">
 						<Image
-							src={getImageUrl(image)} 
+							// src={image.startsWith("http") ? image : getImageUrl(image)} 
+							src={image}
 							alt={`${hosting.name} Image ${index+1}`} 
 							className="w-full h-[200px] object-cover rounded-md" 
 							width={500}

@@ -25,8 +25,8 @@ export default async function OwnerLayout({ children }: OwnerLayoutProps) {
                     duration: 5000,
                     style: {
                         backgroundColor: '#020618',
-                        border: '1px solid #fff',
-                        color: '#fff',
+                        border: '1px solid #ff7205',
+                        color: '#ff7205',
                     },
                 }}
             />

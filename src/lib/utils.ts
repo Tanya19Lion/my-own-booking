@@ -19,3 +19,12 @@ export function clearAndCapitalizeCity(city: string) {
 
     return capitalizedCity;
 };
+
+export const formatDateForInput = (date?: string | Date | null) => {
+    if (!date) return "";
+    return new Date(date).toISOString().split("T")[0];
+};
+
+export function isDate(value: unknown): value is Date {
+    return value instanceof Date && !isNaN(value.getTime());
+}

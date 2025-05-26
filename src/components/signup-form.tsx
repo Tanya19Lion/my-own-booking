@@ -57,7 +57,7 @@ export default function SignUpForm() {
 		}
 
 		if (file.size > MAX_FILE_SIZE) {
-			toast.error("File size must be less than 5MB.");
+			toast.error("File size must be less than 300KB.");
 			e.target.value = "";
 			setPhotoPreview(null);
 			return;
@@ -98,6 +98,7 @@ export default function SignUpForm() {
 					placeholder="Tell more about yourself" 
 					id="bio" 
 					{...register('bio')}
+					maxLength={1000}
 					className="border border-gray-300 rounded-md p-2" 
 				/>
 				{errors.bio && <p className="text-red-500">{errors.bio.message}</p>}

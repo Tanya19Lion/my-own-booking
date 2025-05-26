@@ -28,7 +28,15 @@ export default async function HostingsList({ place, page = 1, maxGuests, startDa
 		<section className="flex flex-wrap justify-center gap-10 max-w-[1100px]">
 			{
 				hostings.length !== 0 
-					? hostings.map((hosting: HostingWithOwner) => <HostingCard key={hosting.id} hosting={hosting} />) 
+					? hostings.map((hosting) => (
+						<HostingCard
+							key={hosting.id}
+							hosting={{
+								...hosting,
+								availability: hosting.availability === null ? undefined : hosting.availability,
+							} as HostingWithOwner}
+						/>
+					))
 					: <H2 className="text-muted-foreground">Sorry, no hostings found with the entered data</H2>
 			}	
 

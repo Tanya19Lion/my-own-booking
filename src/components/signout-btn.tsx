@@ -15,7 +15,7 @@ export const SignOutBtn = () => {
                 startTransition(async () => await logOut())}
             }
         >
-            Sign out
+            {isPending ? 'Signing out...' : 'Sign out'}
         </Button>
     );
 }

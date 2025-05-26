@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
 import { getHosting } from "@/lib/server-utils";
@@ -24,9 +25,9 @@ export default async function HostingPage({ params }: HostingPageProps) {
 	const { id, name, price, location, maxGuests, description, owner } = hosting;
 
 	return (		
-		<main className="w-[100%] flex flex-col items-center pt-18 pb-18 px-3">
+		<main className="w-[100%] flex flex-col items-center pt-18 pb-18 px-3 sm:px-4">
 			<Card className="mx-auto p-6" key={id}>
-				<HostingDetailsCardImages hosting={hosting} />
+				{hosting && <HostingDetailsCardImages hosting={hosting} />}
 				<Separator className="mt-4 mb-6" />
 
 				<div className="flex justify-between gap-4">
@@ -62,7 +63,7 @@ export default async function HostingPage({ params }: HostingPageProps) {
 
 				{owner && <OwnerAvatar owner={owner} className="w-10 h-10"/>}	
 				<p className="mt-5">{owner.bio}</p>
-				<p className="mt-5">Contacts: <strong>{owner.email}</strong></p>
+				<a href={`mailto:${owner.email}`} className="mt-5">Contacts: <strong>{owner.email}</strong></a>
 			</Card>
 		</main>	
 	);
