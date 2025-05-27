@@ -14,7 +14,7 @@ function StartDatePopover({ startDate, setStartDate, className }: StartDatePopov
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent", !startDate && "text-muted-foreground", className)}>
+                <Button className={cn("w-full justify-center text-left border-1 border-color-foreground hover:!bg-transparent", !startDate && "text-muted-foreground", className)}>
                     {startDate ? format(startDate, 'PPP') : 'Start Date'}
                 </Button>
             </PopoverTrigger>

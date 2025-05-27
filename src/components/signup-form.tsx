@@ -81,7 +81,7 @@ export default function SignUpForm() {
 	}, [photoPreview]);
 
 	return (
-		<form encType="multipart/form-data"	onSubmit={handleSubmit(onSubmit)} className="min-w-[320px] max-w-[400px] space-y-4">
+		<form encType="multipart/form-data"	onSubmit={handleSubmit(onSubmit)} className="sm:min-w-[320px] lg:min-w-[400px] space-y-4">
 			<div className="space-y-2">
 				<Label htmlFor="firstName">First name</Label>
 				<Input id="firstName" {...register('firstName')} className="border border-gray-300 rounded-md p-2" />

@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
 import { getHosting } from "@/lib/server-utils";
@@ -25,14 +24,20 @@ export default async function HostingPage({ params }: HostingPageProps) {
 	const { id, name, price, location, maxGuests, description, owner } = hosting;
 
 	return (		
-		<main className="w-[100%] flex flex-col items-center pt-18 pb-18 px-3 sm:px-4">
+        <main className="main-container">
 			<Card className="mx-auto p-6" key={id}>
 				{hosting && <HostingDetailsCardImages hosting={hosting} />}
 				<Separator className="mt-4 mb-6" />
 
 				<div className="flex justify-between gap-4">
 					<div className="flex flex-col gap-4">
-						<h1 className="mb-2 text-2xl font-bold">{name}</h1>
+						<div className="flex items-center justify-between gap-6">
+							<h1 className="mb-2 text-2xl font-bold">{name}</h1>
+							<div>
+								<FavouriteHostingsButton id={id} className="heart-color"/>
+							</div>
+						</div>
+						
 						<div className="whitespace-pre-line">{description}</div>
 
 						<div className="flex items-center gap-2">
@@ -54,9 +59,7 @@ export default async function HostingPage({ params }: HostingPageProps) {
 						</div>
 					</div>
 
-					<div>
-						<FavouriteHostingsButton id={id} className="heart-color"/>
-					</div>
+					
 				</div>
 
 				<Separator className="my-4"/>

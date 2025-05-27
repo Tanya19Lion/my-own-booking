@@ -11,7 +11,7 @@ export default function OwnerDashboard() {
     const { hostings, owner } = useOwnerData();
 
     return (
-        <main className="w-[100%] flex flex-col items-center pb-12 pt-28 px-3 sm:px-9">
+        <main className="main-container">
             <H1 className="text-4xl font-bold mb-16">Hello, {owner.firstName} {owner.lastName}</H1>
             <div className="w-full flex flex-col gap-5 mb-10 sm:flex-row sm:items-center sm:justify-between">
                 <H2 className="text-2xl font-bold mb-0">

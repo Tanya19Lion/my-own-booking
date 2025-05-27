@@ -15,7 +15,7 @@ function EnfDatePopover({ endDate, setEndDate, startDate, className }: SearchDat
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent", !endDate && "text-muted-foreground", className)}>
+                <Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent hover:!bg-transparent", !endDate && "text-muted-foreground", className)}>
                     {endDate ? format(endDate, 'PPP') : 'End Date'}
                 </Button>
             </PopoverTrigger>

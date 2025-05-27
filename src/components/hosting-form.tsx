@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { hostingFormSchema, HostingFormSchema } from "@/lib/validations";
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 import Image from "next/image";
-import { formatDateForInput, getImageUrl, isDate } from "@/lib/utils";
+import { formatDateForInput, isDate } from "@/lib/utils";
 
 type HostingFormProps = {
 	actionType: "add" | "edit";	

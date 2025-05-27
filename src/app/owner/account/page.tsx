@@ -8,12 +8,12 @@ export default function OwnerPage() {
     const { owner } = useOwnerData();
 
     return (
-        <div className="flex flex-col items-center justify-center pt-28 space-y-4"> 
+        <main className="main-container">
             <H1 className="text-center mb-12">Your account</H1>    
-            <p className="text-center">Logged in as {owner.email}</p>                 
+            <p className="text-center mb-6">Logged in as {owner.email}</p>                 
            
            <SignOutBtn />
-        </div>
+        </main>
     );
 }
 

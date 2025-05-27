@@ -5,10 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   	return twMerge(clsx(inputs))
 };
 
-export const getImageUrl = (filename: string) => {
-	return `/assets/${filename}`;
-};
-
 export function clearAndCapitalizeCity(city: string) {
     const trimmedCity = city.trim();
     const normalizedCity = trimmedCity.replace(/\s+/g, " ");

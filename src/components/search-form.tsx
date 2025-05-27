@@ -41,21 +41,31 @@ export default function SearchForm() {
 	};	
 
 	return (
-		<form  onSubmit={handleSubmit(onSubmit)} className="w-full flex justify-center gap-4">
-			<SearchInput register={register} errors={errors}/>
+		<form 
+			onSubmit={handleSubmit(onSubmit)} 
+			className="w-full md:w-[50%] flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-center lg:gap-4"
+		>
+			<div className="w-full min-w-[220px] md:w-auto">
+				<SearchInput register={register} errors={errors}/>
+			</div>
 
-			<SearchDates 
-				startDate={startDate} 
-				setStartDate={setStartDate} 
-				endDate={endDate} 
-				setEndDate={setEndDate} 
-				register={register}
-				errors={errors}
-			/>
+			<div className="w-full md:w-auto">
+				<SearchDates 
+					startDate={startDate} 
+					setStartDate={setStartDate} 
+					endDate={endDate} 
+					setEndDate={setEndDate} 
+					register={register}
+					errors={errors}
+				/>
+			</div>
+			<div className="w-full md:w-auto">
+				<SearchGuests guests={guests} setGuests={setGuests} register={register} errors={errors} />
+			</div>
 
-			<SearchGuests guests={guests} setGuests={setGuests} register={register} errors={errors} />
-
-			<SearchButton isSubmitting={isSubmitting} />			
+			<div className="w-full md:w-auto">
+				<SearchButton isSubmitting={isSubmitting} />	
+			</div>		
 		</form>
 	);
 }
@@ -91,14 +101,14 @@ type SearchDatesProps = {
 };
 export const SearchDates = ({ startDate, setStartDate, endDate, setEndDate, register, errors }: SearchDatesProps) => {
 	return (
-		<div className="flex">
-			<div className="flex space-x-4">			
-				<div className="w-45">
+		<>
+			<div className="flex flex-col sm:flex-row gap-4">		
+				<div className="w-full sm:w-[50%] lg:min-w-[220px]">
 					<StartDatePopover 
 						startDate={startDate} 
 						setStartDate={setStartDate} />
 				</div>
-				<div className="w-45">
+				<div className="w-full sm:w-[50%] lg:min-w-[220px]">
 					<EndDatePopover 
 						endDate={endDate} 
 						startDate={startDate}
@@ -110,7 +120,8 @@ export const SearchDates = ({ startDate, setStartDate, endDate, setEndDate, regi
 
 			<input type="hidden" id="startDate" {...register("startDate")} value={startDate?.toISOString() || ''} />
 			<input type="hidden" id="endDate" {...register("endDate")} value={endDate?.toISOString() || ''} />
-		</div>
+		
+		</>
 	);
 };
 
@@ -123,9 +134,9 @@ type SearchGuestsProps = {
 const SearchGuests = ({ guests, setGuests, register, errors }: SearchGuestsProps) => {
 	return (
 		<div className="h-9 min-w-0 rounded-md border bg-transparent px-3 py-1 shadow-xs outline-none flex items-center justify-between">
-			<div className="flex items-center space-x-4">
+			<div className="w-full flex items-center justify-center gap-2">
 				<Button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className='bg-transparent hover:bg-transparent'>-</Button>
-				<span>{guests}</span>
+				<span className='px-2'>{guests}</span>
 				<Button type="button" onClick={() => setGuests(guests + 1)} className='bg-transparent hover:bg-transparent'>+</Button>
 			</div>
 			<input type="hidden" id="guests" {...register("guests")} value={guests} />
@@ -139,10 +150,10 @@ type SearchButtonProps = {
 };
 const SearchButton = ({ isSubmitting }: SearchButtonProps) => {
 	return (
-		<div>
+		<div className='w-full md:w-auto text-center'>
 			<Button 
 				type="submit" 
-				className="common-btn hover:bg-accent focus:bg-accent active:bg-accent"
+				className="common-btn hover:bg-accent focus:bg-accent active:bg-accent w-full"
 				disabled={isSubmitting}
 			>{isSubmitting ? 'Searching...' : 'Search'}</Button>			
 		</div>

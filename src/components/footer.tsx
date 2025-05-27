@@ -12,9 +12,9 @@ const routes = [
 
 export default function Footer() {
 	return (
-		<footer className="mt-auto flex items-center justify-between h-16 border-t border-white/10 px-3 sm:px-9 text-xs text-white/25">
-			<small className="text-xs">&copy; 2025 Tanya. All rights reserved.</small>
-			<ul className="flex gap-x-3 sm:gap-x-8">
+		<footer className="flex gap-6 flex-col-reverse sm:flex-row sm:items-center sm:justify-between border-t border-white/10 py-4 px-3 sm:px-9 text-xs text-white/25">
+			<small className="text-xs text-center sm:text-left">&copy; 2025 Tanya. All rights reserved.</small>
+			<ul className="flex justify-center gap-x-6 sm:gap-x-8">
 				{
 					routes.map(route => {
 						return <li key={route.path} className="hover:text-white/50 transition">

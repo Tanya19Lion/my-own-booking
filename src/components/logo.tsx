@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 export default function Logo() {
 	return (
-		<Link href="/">
-			<Image  priority src={logo} alt="CozyPlaces Logo" width={174} height={44} />
+		<Link href="/" className='shrink-0'>
+			<Image priority src={logo} alt="CozyPlaces Logo" width={174} height={44} className='shrink-0'/>
 		</Link>
 	);
 }

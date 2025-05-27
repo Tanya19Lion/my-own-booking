@@ -17,7 +17,7 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.854 0.046 257.417);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -122,10 +122,6 @@
 
 @theme {
   --color-accent: #05acff ; 
-  /* --color-accent: #FF7205; */
-  /* #f723ff */
-  /* #4cff05 */
-  /* #05ffdf */
 }
 
 @layer components {
@@ -147,7 +143,7 @@
   }
 
   .common-btn {
-    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md py-2 px-4 transition duration-200;  
+    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md py-2 px-4 bg-transparent transition duration-200;  
   }
 
   .visually-hidden {
@@ -160,6 +156,13 @@
     clip: rect(0 0 0 0) !important;
     white-space: nowrap !important;
     border: 0 !important;
+  }
+
+  .main-container {
+    @apply w-[100%] flex flex-col items-center flex-1 pb-12 pt-12 md:pt-28 px-3 sm:px-4;
+  }
+  .section-block {
+    @apply w-full mt-8;
   }
 }
 

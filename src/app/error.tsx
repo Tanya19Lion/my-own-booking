@@ -16,8 +16,7 @@ export default function Error({ error, reset }: ErrorProps) {
 	}, [error]);
 
 	return (
-		<main className="text-center py-24">		
-			{/* <H1>{error.message}</H1> */}
+		<main className="main-container">
 			<H1 className="flex gap-4 items-center justify-center mb-12">
 				<span>Sorry, something went wrong</span>
 				<span><FrownIcon size={40} /></span>

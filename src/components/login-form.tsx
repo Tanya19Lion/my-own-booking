@@ -22,7 +22,7 @@ export default function LoginForm() {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}	className="min-w-[320px] max-w-[400px] space-y-4">
+		<form onSubmit={handleSubmit(onSubmit)}	className="sm:min-w-[320px] lg:min-w-[400px] space-y-4">
 			<div className="space-y-2">
 				<Label htmlFor="email" >Email</Label>
 				<Input id="email" type="email" {...register('email')} className="border border-gray-300 rounded-md p-2" />

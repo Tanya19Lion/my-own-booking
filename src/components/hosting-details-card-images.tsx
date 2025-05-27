@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Hosting } from "@prisma/client";
-import { getImageUrl } from "@/lib/utils";
 import Image from "next/image";
 
 type HostingDetailsCardImagesProps = {
@@ -16,41 +15,46 @@ export default function HostingDetailsCardImages({ hosting }: HostingDetailsCard
 	const imageArray: string[] = Array.isArray(hosting.images)
 		? hosting.images
 		: JSON.parse(hosting.images as string);
-console.log("Image array:", imageArray);
+
 	return (
         <>
-			<Image 
-				className="mb-4 h-[650px] rounded-md object-contain"
-				// src={imageArray[currentImageIndex].startsWith("http") ? imageArray[currentImageIndex] : getImageUrl(imageArray[currentImageIndex])}
-				src={imageArray[currentImageIndex]}
-				alt={hosting.name}
-				sizes="(max-width: 1280px) 100wv, 1280px" 
-				width={1280}	
-				height={650}
-			/>
-			<Carousel className="mx-auto mb-4 w-[90%] flex justify-center">
-				<CarouselContent className="flex justify-center gap-4 w-full">
+			<div className="mb-4 w-full">
+				<Image
+					className="w-full max-h-[650px] rounded-md object-contain"
+					src={imageArray[currentImageIndex]}
+					alt={hosting.name}
+					sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1280px"
+					width={1280}
+					height={650}
+				/>
+			</div>
+			<Carousel className="mx-auto mb-4 w-[95%]">
+				<CarouselContent className="flex gap-4 md:justify-center">
 					{imageArray.map((image, index) => (
-						<CarouselItem 
-							key={image+index} 
-							className="basis-1/3 cursor-pointer gap-2"
+						<CarouselItem
+							key={image + index}
+							className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 cursor-pointer"
 							onClick={() => setCurrentImageIndex(index)}
-							isSelected={index === currentImageIndex}
 						>
-							<Image 
-								// src={image.startsWith("http") ? image : getImageUrl(image)}  
-								src={image}
-								alt={`${hosting.name} Image ${index+1}`} 
-								className="w-[90%] h-52 object-cover shadow-sm rounded-md" 
-								width={480} 
-								height={280}
-							/> 
+						<Image
+							src={image}
+							alt={`${hosting.name} Image ${index + 1}`}
+							className={`w-full h-32 sm:h-40 md:h-44 object-cover rounded-md transition-opacity ${
+								currentImageIndex === index
+									? "ring-2 ring-primary"
+									: "opacity-50 hover:opacity-100"
+								}`}
+							width={480}
+							height={280}
+						/>
 						</CarouselItem>
 					))}
-				</CarouselContent>	
+				</CarouselContent>
 
-				<CarouselPrevious className="arrow-color" />
-				<CarouselNext className="arrow-color" />
+				<div className="hidden md:block">
+					<CarouselPrevious className="arrow-color" />
+					<CarouselNext className="arrow-color" />
+				</div>
 			</Carousel>
         </>
 	);

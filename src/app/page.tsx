@@ -1,11 +1,15 @@
-// import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import SearchForm from "@/components/search-form";
+import MainBackground from '../../public/assets/background-img-13.jpg';
 import H1 from "@/components/h1";
+import Image from "next/image";
 
 export default function Home() {
 	return (
-		<main className="flex flex-col items-center h-screen pt-36 px-3">
+		<main className="main-container relative">
+			<section className="absolute inset-0 z-[-1] overflow-hidden">
+				<Image src={MainBackground} fill className="object-cover blur-2xl" alt="Main page background" quality={50} sizes="(max-width: 1280px) 100vw, 1280px"/>
+			</section>
 			<H1>Find nice and cozy hosting to stay</H1>	
 
 			<ViewSection>
@@ -32,7 +36,7 @@ export default function Home() {
 				<p>
 					Welcome to do that <Link href="/login" className="text-accent underline font-medium">here</Link>.
 				</p>
-			</ViewSection>	
+			</ViewSection>				
 		</main>
 	);
 }

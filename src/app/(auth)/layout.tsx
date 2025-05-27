@@ -7,7 +7,7 @@ type AuthLayoutProps = {
 export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <>
-            <main className="flex flex-col items-center justify-center mt-auto w-full gap-y-12" >
+            <main className="main-container relative">
                 {children}
             </main>
             <Toaster

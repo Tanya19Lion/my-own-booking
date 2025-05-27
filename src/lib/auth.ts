@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthConfig } from 'next-auth';
+import NextAuth, { NextAuthConfig, Session } from 'next-auth';
+import type { JWT } from "@auth/core/jwt";
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
@@ -66,21 +67,19 @@ const config = {
             }
 
             return false;
-        },  
+        }, 
+        session: ({ session, token }: { session: Session; token: JWT }) => {
+            (session.user as { id: number }).id = token.ownerId as number;
+
+            return session;
+        },
         jwt: ({ token, user }) => {
             if (user) {
                 token.ownerId = Number(user.id);
             }
-    
+
             return token;
-        },
-        session: ({ session, token }) => {
-            if (session.user) {
-                session.user.id = Number(token.ownerId);
-            }      
-    
-            return session;
-        },      
+        },            
     },
     
 } satisfies NextAuthConfig;
