@@ -40,11 +40,8 @@ export default async function HostingsPage(props: Promise<HostingsPageProps>) {
 	);
 }
 
-export async function generateMetadata(props: Promise<Props>): Promise<Metadata> {
-	const { params } = await props;
-	const { place } = params;
-
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	return {	
-		title: place === 'all' ? 'All hostings' : `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(place))}`,
+		title:params.place === 'all' ? 'All hostings' : `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(params.place))}`,
 	};
 }

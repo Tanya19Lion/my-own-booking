@@ -160,16 +160,13 @@ interface CarouselItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const CarouselItem = React.forwardRef<HTMLDivElement, CarouselItemProps>(({ children, className, isSelected, ...props }, ref) => {
-  const { orientation } = useCarousel()
-
   return (
     <div
       ref={ref}
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        // orientation === "horizontal" ? "pl-4" : "pt-4",
+        "min-w-0 shrink-0 grow-0 basis-full",        
         className
       )}
       {...props}

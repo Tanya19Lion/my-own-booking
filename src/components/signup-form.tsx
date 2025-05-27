@@ -36,7 +36,7 @@ export default function SignUpForm() {
 
 		const error = await signUp(formData);
 		if (error) {
-			toast.error(error.message) || "Something went wrong.";
+			toast.error(error.message);
 			return;
 		}		
 	};	

@@ -138,7 +138,7 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 		return () => {
 			photoPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
 		};
-	}, []);
+	}, [photoPreviews]);
 
 	async function onSubmit(data: HostingFormSchema) {
 		const formData = new FormData();
@@ -162,10 +162,17 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 
 		formData.append("existingImages", JSON.stringify(existingImageUrls));
 
-		const error = await (actionType === "add"
-			? addNewHosting(formData)
-			: editHosting(hosting?.id!, formData)
-		);
+		let error: { message: string; } | undefined = undefined;
+
+		if (actionType === "edit") {
+			if (!hosting || !hosting.id) {
+				toast.error("Hosting data is missing or invalid.");
+				return;
+			}
+			error = await editHosting(hosting.id, formData);
+		} else {
+			error = await addNewHosting(formData);
+		}
 
 		if (error) {
 			toast.warning(error.message);

@@ -35,9 +35,9 @@ export default function SearchForm() {
 
 		const error = await searchHosting(formData);
 		if (error) {
-			toast.error(error.message) || "Something went wrong.";
+			toast.error(error.message);
 			return;
-		}		
+		}	
 	};	
 
 	return (

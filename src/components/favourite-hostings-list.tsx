@@ -36,7 +36,7 @@ export default function FavouriteHostingsList() {
             {
                 favouriteHostings.length !== 0 
                     ? favouriteHostings.map((hosting: HostingWithOwner) => <HostingCard key={hosting.id} hosting={hosting} onFavouriteChange={loadFavourites} />) 
-                    : <H2 className="text-muted-foreground">You don't have any favourite hostings yet</H2>
+                    : <H2 className="text-muted-foreground">You have no favourite hostings yet</H2>
             }	         
         </section>
     )

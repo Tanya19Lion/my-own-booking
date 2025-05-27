@@ -113,7 +113,6 @@ export default function TermsAndConditiosnPage() {
 				<p>
 					CozyPlaces acts as an intermediary between users and accommodation providers. 
 					We are not responsible for any issues that may arise during your stay, including but not limited to property damage, personal injury, or loss of personal belongings. 
-					All accommodations are provided "as is," and any complaints should be addressed directly to the accommodation provider.
 				</p>
 			</section>
 

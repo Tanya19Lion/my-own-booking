@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
 import { getHosting } from "@/lib/server-utils";
@@ -7,18 +7,17 @@ import { Separator } from "@/components/ui/separator";
 import OwnerAvatar from "@/components/owner-avatar";
 import FavouriteHostingsButton from "@/components/favourite-hostings-button";
 
-type HostingPageProps = {
+type PageProps = {
 	params: {
 		slug: string;
-	}
+	};
 };
 
-export default async function HostingPage({ params }: HostingPageProps) {
-	const { slug } = params;
-	const hosting = await getHosting(slug);
+export default async function HostingPage({ params }: PageProps) {
+	const hosting = await getHosting(params.slug);
 
 	if (!hosting) {
-		throw new Error("Hosting not found");
+		throw new Error("Hosting not found!");
 	}
 
 	const { id, name, price, location, maxGuests, description, owner } = hosting;
@@ -72,17 +71,15 @@ export default async function HostingPage({ params }: HostingPageProps) {
 	);
 }
 
-export async function generateMetadata(props: Promise<HostingPageProps>): Promise<Metadata> {
-	const { params } = await props;
-	const { slug } = params;
-	const hosting = await getHosting(slug);
+export async function generateMetadata({ params }: { params: { slug: string }}): Promise<Metadata> {
+	const hosting = await getHosting(params.slug);
 
 	if (!hosting) {
 		throw new Error("Hosting not found");
 	}
 
 	return {
-		title: `${hosting.name}`,
-		description: 'It is a perfect place for your vacation',
+		title: hosting.name,
+		description: "It is a perfect place for your vacation",
 	};
-} 
+}
