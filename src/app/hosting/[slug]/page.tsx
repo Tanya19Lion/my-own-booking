@@ -8,21 +8,22 @@ import OwnerAvatar from "@/components/owner-avatar";
 import FavouriteHostingsButton from "@/components/favourite-hostings-button";
 
 type PageProps = {
-	params: {
+	params: Promise<{
 		slug: string;
-	};
+	}>;
 };
 
-export default async function HostingPage({ params }: PageProps) {
-	const hosting = await getHosting(params.slug);
+export default async function HostingPage(props: PageProps) {
+    const params = await props.params;
+    const hosting = await getHosting(params.slug);
 
-	if (!hosting) {
+    if (!hosting) {
 		throw new Error("Hosting not found!");
 	}
 
-	const { id, name, price, location, maxGuests, description, owner } = hosting;
+    const { id, name, price, location, maxGuests, description, owner } = hosting;
 
-	return (		
+    return (		
         <main className="main-container">
 			<Card className="mx-auto p-6" key={id}>
 				{hosting && <HostingDetailsCardImages hosting={hosting} />}
@@ -71,14 +72,15 @@ export default async function HostingPage({ params }: PageProps) {
 	);
 }
 
-export async function generateMetadata({ params }: { params: { slug: string }}): Promise<Metadata> {
-	const hosting = await getHosting(params.slug);
+export async function generateMetadata(props: { params: Promise<{ slug: string }>}): Promise<Metadata> {
+    const params = await props.params;
+    const hosting = await getHosting(params.slug);
 
-	if (!hosting) {
+    if (!hosting) {
 		throw new Error("Hosting not found");
 	}
 
-	return {
+    return {
 		title: hosting.name,
 		description: "It is a perfect place for your vacation",
 	};

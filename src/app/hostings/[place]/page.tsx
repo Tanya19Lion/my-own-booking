@@ -2,28 +2,22 @@ import H1 from "@/components/h1";
 import { clearAndCapitalizeCity } from "@/lib/utils";
 import { Suspense } from "react";
 import Loading from "./loading";
-import { Metadata } from "next";
 import HostingsList from "@/components/hostings-list";
+import { Metadata } from "next";
 
-type Props = {
-	params: {
-		place: string;
-	}
-};
-type HostingsPageProps = Props & {
-	searchParams: {
-		[key: string]: string | string[] | undefined;
-	}
+type HostingsPageProps = {
+	params: Promise<{ place: string;}>;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function HostingsPage(props: Promise<HostingsPageProps>) {
-	const { params, searchParams } = await props;
-
-	const place = params.place;
- 	const page = searchParams.page ?? 1;
-	const maxGuests = searchParams.guests ? +searchParams.guests : 1;
-	const startDate = searchParams.startDate ? new Date(searchParams.startDate as string) : undefined;
-	const endDate = searchParams.endDate ? new Date(searchParams.endDate as string) : undefined;
+export default async function HostingsPage({ params, searchParams }: HostingsPageProps) {
+	const resolvedParams = await params;
+	const resolvedsearchParams = await searchParams;
+	const place = resolvedParams.place;
+	const page = resolvedsearchParams.page ?? 1;
+	const maxGuests = resolvedsearchParams.guests ? +resolvedsearchParams.guests : 1;
+	const startDate = resolvedsearchParams.startDate ? new Date(resolvedsearchParams.startDate as string) : undefined;
+	const endDate = resolvedsearchParams.endDate ? new Date(resolvedsearchParams.endDate as string) : undefined;
 
 	return (
 		<main className="main-container">
@@ -40,8 +34,12 @@ export default async function HostingsPage(props: Promise<HostingsPageProps>) {
 	);
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	return {	
-		title:params.place === 'all' ? 'All hostings' : `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(params.place))}`,
+export async function generateMetadata(props: { params: Promise<{ place: string }>}): Promise<Metadata> {
+    const params = await props.params;
+    return {	
+		title: params.place === 'all' 
+			? 'All hostings' 
+			: `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(params.place))}`,
 	};
 }
+
