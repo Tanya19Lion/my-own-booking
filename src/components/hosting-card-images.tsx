@@ -28,7 +28,7 @@ export default function HostingCardImages({ hosting, className }: HostingCardIma
 				{imageArray.map((image, index) => (
 					<CarouselItem key={image+index} className="pl-0 w-full h-[60%]">
 						<Image					
-							src={image}
+							src={image.startsWith("http") ? image : `/assets/${image}`}
 							alt={`${hosting.name} Image ${index+1}`} 
 							className="w-full h-[200px] object-cover rounded-md" 
 							width={500}
