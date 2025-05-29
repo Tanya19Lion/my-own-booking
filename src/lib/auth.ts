@@ -50,7 +50,11 @@ const config = {
             const isLoggedIn = Boolean(auth?.user);
             const isTryingToAccessOwnerPage = request.nextUrl.pathname.includes('/owner');
 
-            return isTryingToAccessOwnerPage ? isLoggedIn : true;
+            if (!isLoggedIn && isTryingToAccessOwnerPage) {
+                return false;
+            }
+
+            return true;
 
             // if (!isLoggedIn && isTryingToAccessOwnerPage) {
             //     return false;
