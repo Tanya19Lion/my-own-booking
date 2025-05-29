@@ -1,6 +1,6 @@
 import "server-only";
 
-import { Owner } from "@prisma/client";
+import { Owner } from "../../prisma/app/generated/prisma-client";
 import { notFound, redirect } from "next/navigation";
 import { clearAndCapitalizeCity } from "./utils";
 import { searchFormSchema } from "@/lib/validations";

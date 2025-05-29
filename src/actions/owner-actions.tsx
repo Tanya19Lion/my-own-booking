@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { logInSchema, signUpSchema } from "@/lib/validations";
-import { Prisma } from '@prisma/client';
+import { Prisma } from '../../prisma/app/generated/prisma-client';
 import { AuthError } from 'next-auth';
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 

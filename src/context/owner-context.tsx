@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { Owner } from "@prisma/client";
+import { Owner } from "../../prisma/app/generated/prisma-client";
 import { HostingWithOwner } from "@/lib/types";
 
 type OwnerContextType = {
