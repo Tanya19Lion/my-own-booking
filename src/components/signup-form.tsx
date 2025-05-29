@@ -12,8 +12,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, SignUpSchema } from "@/lib/validations";
 import { toast } from "sonner";
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
+	const router = useRouter();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { register, handleSubmit, formState: {isSubmitting, errors} } = useForm<SignUpSchema>({
 		resolver: zodResolver(signUpSchema),
@@ -34,10 +36,15 @@ export default function SignUpForm() {
 			formData.append("photo", fileInput.files[0]);
 		}
 
-		const error = await signUp(formData);
-		if (error) {
-			toast.error(error.message);
+		const result = await signUp(formData);
+
+		if (result?.message) {
+			toast.error(result.message);
 			return;
+		}
+
+		if (result?.success) {
+			router.push("/owner/dashboard");
 		}		
 	};	
 
