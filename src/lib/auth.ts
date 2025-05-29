@@ -50,23 +50,25 @@ const config = {
             const isLoggedIn = Boolean(auth?.user);
             const isTryingToAccessOwnerPage = request.nextUrl.pathname.includes('/owner');
 
-            if (!isLoggedIn && isTryingToAccessOwnerPage) {
-                return false;
-            } 
+            return isTryingToAccessOwnerPage ? isLoggedIn : true;
 
-            if (isLoggedIn && isTryingToAccessOwnerPage) {
-               return true
-            }
+            // if (!isLoggedIn && isTryingToAccessOwnerPage) {
+            //     return false;
+            // } 
 
-            if (isLoggedIn && !isTryingToAccessOwnerPage) {                          
-                return Response.redirect(new URL('/owner/dashboard', request.nextUrl));   
-            }
+            // if (isLoggedIn && isTryingToAccessOwnerPage) {
+            //    return true
+            // }
 
-            if (!isLoggedIn && !isTryingToAccessOwnerPage) {
-                return true;
-            }
+            // if (isLoggedIn && !isTryingToAccessOwnerPage) {                          
+            //     return Response.redirect(new URL('/owner/dashboard', request.nextUrl));   
+            // }
 
-            return false;
+            // if (!isLoggedIn && !isTryingToAccessOwnerPage) {
+            //     return true;
+            // }
+
+            // return false;
         }, 
         session: ({ session, token }: { session: Session; token: JWT }) => {
             (session.user as { id: number }).id = token.ownerId as number;
