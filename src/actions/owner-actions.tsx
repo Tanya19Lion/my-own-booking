@@ -8,6 +8,7 @@ import { logInSchema, signUpSchema } from "@/lib/validations";
 import { Prisma } from '../../prisma/app/generated/prisma-client';
 import { AuthError } from 'next-auth';
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
+import { redirect } from 'next/navigation';
 
 export async function logIn(authData: unknown) {
     const validatedAuthData = logInSchema.safeParse(authData);
@@ -20,6 +21,7 @@ export async function logIn(authData: unknown) {
 
     try {
         await signIn('credentials', validatedAuthData.data);
+        redirect('/owner/dashboard');
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
@@ -145,7 +147,8 @@ export async function signUp(formData: FormData) {
             password: password,
         };
 
-        await signIn('credentials', credentialsData);   
+        await signIn('credentials', credentialsData);
+        redirect('/owner/dashboard');   
     } catch (error) {
         console.error("Sign up error: ", error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
