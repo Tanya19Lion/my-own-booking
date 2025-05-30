@@ -1,3 +1,5 @@
+import "server-only";
+
 import { PrismaClient } from "../../prisma/app/generated/prisma-client";
 import { withAccelerate } from '@prisma/extension-accelerate';
 

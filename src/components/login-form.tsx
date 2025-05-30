@@ -8,10 +8,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { logInSchema, LogInSchema } from "@/lib/validations";
 import { toast } from "sonner";
-// import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-	// const router = useRouter();
 	const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<LogInSchema>({
 		resolver: zodResolver(logInSchema),
 	});
@@ -23,10 +21,6 @@ export default function LoginForm() {
 			toast.error(result.message);
 			return;
 		}
-
-		// if (result?.success) {
-		// 	router.push("/owner/dashboard"); 
-		// }
 	};
 
 	return (

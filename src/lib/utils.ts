@@ -24,3 +24,5 @@ export const formatDateForInput = (date?: string | Date | null) => {
 export function isDate(value: unknown): value is Date {
     return value instanceof Date && !isNaN(value.getTime());
 }
+
+export const absoluteUrl = (path: string) => `${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}${path}`;

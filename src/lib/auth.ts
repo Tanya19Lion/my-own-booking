@@ -2,8 +2,8 @@ import NextAuth, { NextAuthConfig, Session } from 'next-auth';
 import type { JWT } from "@auth/core/jwt";
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { getOwner } from './server-utils';
 import { logInSchema } from './validations';
+import { absoluteUrl } from './utils';
 
 const config = {
     providers: [
@@ -16,7 +16,11 @@ const config = {
 
                 const { email, password } = validatedAuthData.data;
 
-                const user = await getOwner(email);
+                const user = await fetch(absoluteUrl('/api/auth/get-owner'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email }),
+                }).then(res => res.ok ? res.json() : null);
 
                 if (!user) {
                     console.log('No owner found with the email address');
