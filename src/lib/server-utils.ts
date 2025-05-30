@@ -171,13 +171,15 @@ export const getHosting = unstable_cache(async (slug: string) => {
 	return hosting;
 });
 
-export const getOwner = async (): Promise<Owner> =>  {
-	const session = await checkAuth();
+
+
+export const getOwner = async (ownerEmail: string): Promise<Owner> =>  {
+	// const session = await checkAuth();
 	
-	const ownerEmail = session?.user?.email;
-	if (!ownerEmail) {
-		redirect("/login");
-	};
+	// const ownerEmail = session?.user?.email || email;
+	// if (!ownerEmail) {
+	// 	redirect("/login");
+	// };
 
 	const owner = await prisma.owner.findUnique({
 		where: {

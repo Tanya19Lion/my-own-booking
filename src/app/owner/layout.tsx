@@ -1,6 +1,7 @@
 import { OwnerDataProvider } from "@/context/owner-context";
-import { getOwner, getHostingsByOwner } from "@/lib/server-utils";
+import { getOwner, getHostingsByOwner, checkAuth } from "@/lib/server-utils";
 import { Toaster } from "@/components/ui/sonner";
+import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic'; 
 
@@ -9,7 +10,14 @@ type OwnerLayoutProps = {
 };
 
 export default async function OwnerLayout({ children }: OwnerLayoutProps) {
-    const owner = await getOwner();
+    const session = await checkAuth();
+    
+    const ownerEmail = session?.user?.email;
+    if (!ownerEmail) {
+        redirect("/login");
+    };
+
+    const owner = await getOwner(ownerEmail);
     const hostings = await getHostingsByOwner(owner.id);
 
     return (

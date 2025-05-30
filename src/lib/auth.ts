@@ -2,7 +2,8 @@ import NextAuth, { NextAuthConfig, Session } from 'next-auth';
 import type { JWT } from "@auth/core/jwt";
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { prisma } from '@/lib/prisma';
+// import { prisma } from '@/lib/prisma';
+import { getOwner } from './server-utils';
 import { logInSchema } from './validations';
 
 const config = {
@@ -16,9 +17,10 @@ const config = {
 
                 const { email, password } = validatedAuthData.data;
 
-                const user = await prisma.owner.findUnique({
-                    where: { email },
-                });
+                const user = await getOwner(email);
+                // prisma.owner.findUnique({
+                //     where: { email },
+                // });
 
                 if (!user) {
                     console.log('No owner found with the email address');
@@ -55,7 +57,7 @@ const config = {
             } 
 
             if (isLoggedIn && isTryingToAccessOwnerPage) {
-               return true
+               return true;
             }
 
             if (isLoggedIn && !isTryingToAccessOwnerPage) {                          
@@ -84,4 +86,4 @@ const config = {
     
 } satisfies NextAuthConfig;
 
-export const { auth, signIn, signOut, handlers: { GET, POST } } = NextAuth(config);
+export const { auth, signIn, signOut } = NextAuth(config);
