@@ -20,7 +20,7 @@ export default async function HostingsPage({ params, searchParams }: HostingsPag
 	const endDate = resolvedsearchParams.endDate ? new Date(resolvedsearchParams.endDate as string) : undefined;
 
 	return (
-		<main className="main-container">
+		<main className="main-container min-h-screen">
 			<H1 className="text-center px-3 mb-16">
 				{place === 'favorites' && 'Your favourite hostings'}
 				{place === 'all' && 'All hostings'}

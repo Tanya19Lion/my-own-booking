@@ -105,7 +105,7 @@ export async function addNewHosting(formData: unknown) {
                 return { message: "Invalid file type." };
             }
             if (file.size > MAX_FILE_SIZE) {
-                return { message: "A file exceeds the size limit." };
+                return { message: `A file exceeds the ${MAX_FILE_SIZE}Kb limit.` };
             }
 
             const arrayBuffer = await file.arrayBuffer();
@@ -234,7 +234,7 @@ export async function editHosting(selectedHostingId: number, formData: unknown) 
                 return { message: "Invalid file type." };
             }
             if (file.size > MAX_FILE_SIZE) {
-                return { message: "A file exceeds the size limit." };
+                return { message: `A file exceeds the ${MAX_FILE_SIZE}Kb limit.`};
             }
 
             const arrayBuffer = await file.arrayBuffer();

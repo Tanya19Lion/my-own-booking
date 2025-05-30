@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import type { Hosting } from "../../prisma/app/generated/prisma-client";
 import Image from "next/image";
+import { changeImageUrl } from "@/lib/utils";
 
 type HostingDetailsCardImagesProps = {
 	hosting: Hosting;
@@ -21,7 +22,7 @@ export default function HostingDetailsCardImages({ hosting }: HostingDetailsCard
 			<div className="mb-4 w-full">
 				<Image
 					className="w-full max-h-[650px] rounded-md object-contain"
-					src={imageArray[currentImageIndex].startsWith("http") ? imageArray[currentImageIndex] : `assets/${imageArray[currentImageIndex]}`}
+					src={imageArray[currentImageIndex].startsWith("http") ? imageArray[currentImageIndex] : changeImageUrl(imageArray[currentImageIndex])}
 					alt={hosting.name}
 					sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1280px"
 					width={1280}
@@ -37,7 +38,7 @@ export default function HostingDetailsCardImages({ hosting }: HostingDetailsCard
 							onClick={() => setCurrentImageIndex(index)}
 						>
 						<Image
-							src={image.startsWith("http") ? image : `assets/${image}`}
+							src={image.startsWith("http") ? image : changeImageUrl(image)}
 							alt={`${hosting.name} Image ${index + 1}`}
 							className={`w-full h-32 sm:h-40 md:h-44 object-cover rounded-md transition-opacity ${
 								currentImageIndex === index

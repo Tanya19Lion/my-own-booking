@@ -26,3 +26,7 @@ export function isDate(value: unknown): value is Date {
 }
 
 export const absoluteUrl = (path: string) => `${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}${path}`;
+
+export const changeImageUrl = (image: string) => {
+    return `/assets/${image}`;
+}; 

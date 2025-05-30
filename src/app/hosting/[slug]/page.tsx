@@ -24,7 +24,7 @@ export default async function HostingPage(props: PageProps) {
     const { id, name, price, location, maxGuests, description, owner } = hosting;
 
     return (		
-        <main className="main-container">
+        <main className="main-container min-h-screen">
 			<Card className="mx-auto p-6" key={id}>
 				{hosting && <HostingDetailsCardImages hosting={hosting} />}
 				<Separator className="mt-4 mb-6" />

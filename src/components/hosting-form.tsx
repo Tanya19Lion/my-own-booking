@@ -105,7 +105,7 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 				continue;
 			}
 			if (file.size > MAX_FILE_SIZE) {
-				toast.error("File size must be less than 300KB.");
+				toast.error(`File size must be less than ${MAX_FILE_SIZE}Kb.`);
 				continue;
 			}
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import type { Hosting } from "../../prisma/app/generated/prisma-client";
-import { cn } from "@/lib/utils";
+import { changeImageUrl, cn } from "@/lib/utils";
 import Image from "next/image";
 
 type HostingCardImagesProps = {
@@ -28,7 +28,7 @@ export default function HostingCardImages({ hosting, className }: HostingCardIma
 				{imageArray.map((image, index) => (
 					<CarouselItem key={image+index} className="pl-0 w-full h-[60%]">
 						<Image					
-							src={image.startsWith("http") ? image : `/assets/${image}`}
+							src={image.startsWith("http") ? image : changeImageUrl(image)}
 							alt={`${hosting.name} Image ${index+1}`} 
 							className="w-full h-[200px] object-cover rounded-md" 
 							width={500}

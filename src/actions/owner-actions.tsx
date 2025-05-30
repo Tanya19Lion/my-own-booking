@@ -85,7 +85,7 @@ export async function signUp(formData: FormData) {
 
                 if (file.size > MAX_FILE_SIZE) {
                     return {
-                        message: `File size exceeds the 300KB limit.`,
+                        message: `A file exceeds the ${MAX_FILE_SIZE}Kb limit. Please choose a smaller file.`,
                     };
                 }
 
