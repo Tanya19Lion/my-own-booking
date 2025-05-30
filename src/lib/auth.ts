@@ -52,27 +52,21 @@ const config = {
 
             if (!isLoggedIn && isTryingToAccessOwnerPage) {
                 return false;
+            } 
+
+            if (isLoggedIn && isTryingToAccessOwnerPage) {
+               return true
             }
 
-            return true;
+            if (isLoggedIn && !isTryingToAccessOwnerPage) {                          
+                return Response.redirect(new URL('/owner/dashboard', request.nextUrl));   
+            }
 
-            // if (!isLoggedIn && isTryingToAccessOwnerPage) {
-            //     return false;
-            // } 
+            if (!isLoggedIn && !isTryingToAccessOwnerPage) {
+                return true;
+            }
 
-            // if (isLoggedIn && isTryingToAccessOwnerPage) {
-            //    return true
-            // }
-
-            // if (isLoggedIn && !isTryingToAccessOwnerPage) {                          
-            //     return Response.redirect(new URL('/owner/dashboard', request.nextUrl));   
-            // }
-
-            // if (!isLoggedIn && !isTryingToAccessOwnerPage) {
-            //     return true;
-            // }
-
-            // return false;
+            return false;
         }, 
         session: ({ session, token }: { session: Session; token: JWT }) => {
             (session.user as { id: number }).id = token.ownerId as number;

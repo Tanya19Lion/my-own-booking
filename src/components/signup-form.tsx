@@ -12,10 +12,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, SignUpSchema } from "@/lib/validations";
 import { toast } from "sonner";
 import { ALLOWED_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
-	const router = useRouter();
+	// const router = useRouter();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { register, handleSubmit, formState: {isSubmitting, errors} } = useForm<SignUpSchema>({
 		resolver: zodResolver(signUpSchema),
@@ -43,9 +43,9 @@ export default function SignUpForm() {
 			return;
 		}
 
-		if (result?.success) {
-			router.push("/owner/dashboard");
-		}		
+		// if (result?.success) {
+		// 	router.push("/owner/dashboard");
+		// }		
 	};	
 
 	function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
