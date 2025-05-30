@@ -1,4 +1,4 @@
-import { Hosting, Owner, Availability } from "../../prisma/app/generated/prisma-client";
+import type { Hosting, Owner, Availability } from "../../prisma/app/generated/prisma-client";
 
 export type OwnerEssential = Omit<Owner, 'id' | 'password' |'createdAt' | 'updatedAt'>;
 export type HostingEssential = Omit<Hosting, 'id' | 'createdAt' | 'updatedAt'>;
