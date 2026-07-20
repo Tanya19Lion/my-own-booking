@@ -147,8 +147,12 @@ export async function signUp(formData: FormData) {
         };
 
         await signIn('credentials', credentialsData);
-        return { success: true };  
+        return { success: true };
     } catch (error) {
+        if (error && typeof error === 'object' && 'digest' in error && typeof error.digest === 'string' && error.digest.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
+
         console.error("Sign up error: ", error);
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
             if (error.code === "P2002") {

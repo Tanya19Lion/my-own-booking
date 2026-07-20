@@ -38,6 +38,10 @@ model Hosting {
   owner          Owner         @relation(fields: [ownerId], references: [id])
   updatedAt      DateTime      @updatedAt
   createdAt      DateTime      @default(now())
+
+  @@index([ownerId])
+  @@index([location])
+  @@index([maxGuests])
 }
 
 model Availability {

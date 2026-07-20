@@ -33,49 +33,7 @@ export const getHostings = unstable_cache( async (rawParams: unknown) => {
 
     const normalizedCity = clearAndCapitalizeCity(decodeURIComponent(city));
 
-	const hostings = await prisma.hosting.findMany({
-		where: {
-			location: city === 'all' ? undefined : {
-				contains: normalizedCity,	
-    		},
-			maxGuests: {
-				gte: guests,
-			},
-			...(shouldFilterByAvailability && {
-				availability: {
-					from: {
-						lte: startDate,
-					},
-					to: {
-						gte: endDate,
-					},
-				},
-			}),
-		},
-		include: {
-			owner: {
-				select: {
-					email: true,
-					firstName: true,
-					lastName: true,
-					bio: true,
-					avatarUrl: true,
-				},
-			},
-			availability: {
-				select: {
-					from: true,
-					to: true,
-				},
-			}
-		},
-		take: 6,
-		skip: ((page ?? 1) - 1) * 6,
-	});
-  
-	let totalCount = 0;
-  
-	const whereForCount = {
+	const where = {
 		location: city === 'all' ? undefined : {
 			contains: normalizedCity,
 		},
@@ -93,11 +51,33 @@ export const getHostings = unstable_cache( async (rawParams: unknown) => {
 			},
 		}),
 	};
-  
-	totalCount = await prisma.hosting.count({
-		where: whereForCount,
-	});
-  
+
+	const [hostings, totalCount] = await Promise.all([
+		prisma.hosting.findMany({
+			where,
+			include: {
+				owner: {
+					select: {
+						email: true,
+						firstName: true,
+						lastName: true,
+						bio: true,
+						avatarUrl: true,
+					},
+				},
+				availability: {
+					select: {
+						from: true,
+						to: true,
+					},
+				}
+			},
+			take: 6,
+			skip: ((page ?? 1) - 1) * 6,
+		}),
+		prisma.hosting.count({ where }),
+	]);
+
 	return {
 		hostings,
 		totalCount,
