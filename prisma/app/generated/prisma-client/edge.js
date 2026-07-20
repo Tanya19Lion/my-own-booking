@@ -188,7 +188,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../..",
@@ -198,7 +198,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -207,8 +206,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./app/generated/prisma-client\"\n}\n\nmodel Owner {\n  id        Int       @id @default(autoincrement())\n  email     String    @unique\n  firstName String\n  lastName  String\n  bio       String\n  password  String\n  avatarUrl String\n  hostings  Hosting[]\n  updatedAt DateTime  @updatedAt\n  createdAt DateTime  @default(now())\n}\n\nmodel Hosting {\n  id             Int           @id @default(autoincrement())\n  slug           String        @unique\n  name           String        @unique\n  description    String\n  location       String\n  images         Json\n  price          Int\n  maxGuests      Int\n  guestFavorite  Boolean\n  rating         Float\n  availability   Availability?\n  availabilityId Int?\n  ownerId        Int\n  owner          Owner         @relation(fields: [ownerId], references: [id])\n  updatedAt      DateTime      @updatedAt\n  createdAt      DateTime      @default(now())\n}\n\nmodel Availability {\n  id        Int       @id @default(autoincrement())\n  from      DateTime?\n  to        DateTime?\n  hostingId Int       @unique\n  hosting   Hosting   @relation(fields: [hostingId], references: [id])\n}\n",
-  "inlineSchemaHash": "e38980096066bad46fdbafa8880648e7046be1106f0b90d56377ed786dda2ee8",
+  "inlineSchema": "datasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./app/generated/prisma-client\"\n}\n\nmodel Owner {\n  id        Int       @id @default(autoincrement())\n  email     String    @unique\n  firstName String\n  lastName  String\n  bio       String\n  password  String\n  avatarUrl String\n  hostings  Hosting[]\n  updatedAt DateTime  @updatedAt\n  createdAt DateTime  @default(now())\n}\n\nmodel Hosting {\n  id             Int           @id @default(autoincrement())\n  slug           String        @unique\n  name           String        @unique\n  description    String\n  location       String\n  images         Json\n  price          Int\n  maxGuests      Int\n  guestFavorite  Boolean\n  rating         Float\n  availability   Availability?\n  availabilityId Int?\n  ownerId        Int\n  owner          Owner         @relation(fields: [ownerId], references: [id])\n  updatedAt      DateTime      @updatedAt\n  createdAt      DateTime      @default(now())\n\n  @@index([ownerId])\n  @@index([location])\n  @@index([maxGuests])\n}\n\nmodel Availability {\n  id        Int       @id @default(autoincrement())\n  from      DateTime?\n  to        DateTime?\n  hostingId Int       @unique\n  hosting   Hosting   @relation(fields: [hostingId], references: [id])\n}\n",
+  "inlineSchemaHash": "e2c8ed5e1bcb13091afe80b317519d370f7bc520f5ab06863059ea44610a5abc",
   "copyEngine": false
 }
 config.dirname = '/'

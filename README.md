@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CozyPlaces (my-own-booking)
 
-## Getting Started
+A booking/listings app (Airbnb-style) built with Next.js 15 App Router, React 19, Prisma +
+Accelerate, and NextAuth 5. Guests can search hostings by city, guest count, and availability
+dates, and save favourites locally. Owners can sign up, log in, and manage their own hostings
+(create/edit/delete, with photo uploads to Cloudinary).
 
-First, run the development server:
+## Tech stack
+
+- **Framework:** Next.js 15 (App Router), React 19, TypeScript
+- **Styling:** Tailwind CSS 4, Radix UI primitives (shadcn-style), CVA for variants
+- **Data:** PostgreSQL via Prisma 6 + Prisma Accelerate
+- **Auth:** NextAuth 5 (beta), credentials provider, JWT sessions
+- **Images:** Cloudinary (uploads + hosting), `next/image` for rendering
+- **Forms/validation:** react-hook-form + zod
+
+See [`docs/architecture.md`](docs/architecture.md) for the full architecture writeup.
+
+## Prerequisites
+
+- Node.js (a recent LTS)
+- A PostgreSQL database (Prisma Accelerate is used in `src/lib/prisma.ts`)
+- A Cloudinary account (for image uploads)
+
+## Environment variables
+
+Create a `.env` file in the project root with:
+
+| Variable | Used for |
+|---|---|
+| `DATABASE_URL` | Prisma datasource connection string |
+| `NEXTAUTH_URL` | Base URL used for internal auth callbacks (`src/lib/utils.ts`) |
+| `AUTH_SECRET` | NextAuth 5 session/JWT encryption secret |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary SDK config (`src/lib/cloudinary.ts`) |
+| `CLOUDINARY_API_KEY` | Cloudinary SDK config |
+| `CLOUDINARY_API_SECRET` | Cloudinary SDK config |
+
+## Getting started
 
 ```bash
+# install dependencies
+npm install
+
+# generate the Prisma client
+npx prisma generate --no-engine
+
+# push the schema to your database (no migration history is committed yet —
+# see docs/architecture.md for details)
+npx prisma db push
+
+# run the dev server (Turbopack)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | What it does |
+|---|---|
+| `npm run dev` | Starts the dev server with Turbopack |
+| `npm run build` | Runs `prisma generate --no-engine` then `next build` |
+| `npm run start` | Starts the production server (after `build`) |
+| `npm run lint` | Runs `next lint` |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/            # App Router routes, layouts, API routes
+  actions/        # Server Actions (mutations: search, hosting CRUD, auth)
+  components/     # Feature components + ui/ (design-system primitives)
+  context/        # React Context (owner-scoped data)
+  lib/            # Prisma client, auth config, validation, server utils
+prisma/
+  schema.prisma   # Owner / Hosting / Availability models
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [`docs/architecture.md`](docs/architecture.md) — architecture, data model, conventions, known gaps
+- [`docs/optimization-plan.md`](docs/optimization-plan.md) — tracked performance/optimization work
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The easiest way to deploy is via [Vercel](https://vercel.com/new). Make sure the environment
+variables above are configured in the deployment target, and that `prisma generate --no-engine`
+runs as part of the build (already wired into `npm run build`).

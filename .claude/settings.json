@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(**/.env)",
+      "Read(**/.env)",
+      "Write(**/.env)"
+    ]
+  },
+  "enabledPlugins": {
+    "sdd@sdd": true
+  }
+}

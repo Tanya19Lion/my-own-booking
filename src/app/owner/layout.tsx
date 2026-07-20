@@ -17,8 +17,10 @@ export default async function OwnerLayout({ children }: OwnerLayoutProps) {
         redirect("/login");
     };
 
-    const owner = await getOwner(ownerEmail);
-    const hostings = await getHostingsByOwner(owner.id);
+    const [owner, hostings] = await Promise.all([
+        getOwner(ownerEmail),
+        getHostingsByOwner(session.user.id),
+    ]);
 
     return (
         <>
