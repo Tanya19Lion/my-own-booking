@@ -16,10 +16,10 @@ function EnfDatePopover({ endDate, setEndDate, startDate, className }: SearchDat
         <Popover>
             <PopoverTrigger asChild>
                 <Button className={cn("w-full justify-center text-left border-1 border-color-foreground bg-transparent hover:!bg-transparent", !endDate && "text-muted-foreground", className)}>
-                    {endDate ? format(endDate, 'PPP') : 'End Date'}
+                    {endDate ? format(endDate, 'MMM d, yyyy') : 'End Date'}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 pointer-events-auto z-[999] bg-white">
+            <PopoverContent className="w-auto p-0 pointer-events-auto z-[999]">
                 <DayPicker
                     animate
                     mode="single"

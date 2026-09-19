@@ -187,7 +187,7 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 			<div className="space-y-2">
 				<Label htmlFor="name">Name</Label>
 				<Input id="name" {...register('name')} className="border border-gray-300 rounded-md p-2" />
-				{errors.name && <p className="text-red-500">{errors.name.message}</p>}
+				{errors.name && <p className="text-destructive">{errors.name.message}</p>}
 			</div>			
 			<div className="space-y-2">
 				<Label htmlFor="description">Description</Label>
@@ -198,16 +198,16 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 					onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNumberOfCharacters(e.target.value.length)}					
 					maxLength={1000}
 				/>
-				{numberOfCharacters > 0 && <p className="text-sm text-gray-500">Characters: {numberOfCharacters}/1000</p>}
-				{errors.description && <p className="text-red-500">{errors.description.message}</p>}
+				{numberOfCharacters > 0 && <p className="text-sm text-muted-foreground">Characters: {numberOfCharacters}/1000</p>}
+				{errors.description && <p className="text-destructive">{errors.description.message}</p>}
 			</div>
 			<div className="space-y-2">
 				<Label htmlFor="location">Location</Label>
 				<Input id="location" {...register('location')} className="border border-gray-300 rounded-md p-2" />
-				{errors.location && <p className="text-red-500">{errors.location.message}</p>}
+				{errors.location && <p className="text-destructive">{errors.location.message}</p>}
 			</div>
 			<div className="space-y-2">
-				<Label htmlFor="images" className="sr-only">Your hosting photos</Label>
+				<Label htmlFor="images" className="sr-only">Photos of your place</Label>
 				<Input 
 					key={actionType + '-' + (hosting?.id ?? 'new')} 
 					id="images" 
@@ -221,12 +221,12 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 					type="button"
 					disabled={isSubmitting}
 					onClick={() => fileInputRef.current?.click()} 
-					className="w-full text-black rounded-md border border-gray-300 bg-transparent cursor-pointer hover:text-accent hover:bg-transparent hover:border-accent transition-200"
-				>Upload your hosting photos</Button>							
+					className="w-full rounded-md border border-gray-300 bg-transparent cursor-pointer hover:text-brand hover:bg-transparent hover:border-brand transition-200"
+				>Upload your photos</Button>							
 			</div>		
 			{photoPreviews.length > 0 && (
 				<div className="space-y-2">
-					<p className="text-sm text-gray-500">Preview:</p>
+					<p className="text-sm text-muted-foreground">Preview:</p>
 					<div className="flex flex-wrap gap-4">
 						{photoPreviews.map((preview, index) => (
 							<div key={index} className="relative group">
@@ -250,11 +250,11 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 					<StartDatePopover 
 						startDate={availableFrom} 
 						setStartDate={(date) => setAvailableFrom(date)} 
-						className="text-black bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent"
+						className="bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent"
 					/>	
 				</div>
 				<input type="hidden" id="availableFrom" {...register("availableFrom")} value={availableFrom?.toISOString() || ''} />
-				{errors.availableFrom && <p className="text-red-500">{errors.availableFrom.message}</p>}
+				{errors.availableFrom && <p className="text-destructive">{errors.availableFrom.message}</p>}
 			</div>
 			<div className="space-y-2">
 				<Label htmlFor="availableTo">Available to</Label>
@@ -263,31 +263,31 @@ export default function HostingForm({ actionType, onFormSubmission, hosting }: H
 						endDate={availableTo} 
 						startDate={availableFrom}
 						setEndDate={(date) => setAvailableTo(date)} 
-						className="text-black bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent"
+						className="bg-transparent hover:bg-transparent focus:bg-transparent active:bg-transparent"
 					/>
 				</div>
 				<input type="hidden" id="availableTo" {...register("availableTo")} value={availableTo?.toISOString() || ''} />				
-				{errors.availableTo && <p className="text-red-500">{errors.availableTo.message}</p>}
+				{errors.availableTo && <p className="text-destructive">{errors.availableTo.message}</p>}
 			</div>
 			<div className="space-y-2">
 				<Label htmlFor="price">Price</Label>
 				<Input id="price" {...register('price')} className="border border-gray-300 rounded-md p-2" />
-				{errors.price && <p className="text-red-500">{errors.price.message}</p>}
+				{errors.price && <p className="text-destructive">{errors.price.message}</p>}
 			</div>
 			<div className="space-y-2">				
-				<Label htmlFor="maxGuests">Maximun number of guests</Label>	
+				<Label htmlFor="maxGuests">Maximum number of guests</Label>
 				<Input id="maxGuests" {...register('maxGuests')} className="border border-gray-300 rounded-md p-2" />
-				{errors.maxGuests && <p className="text-red-500">{errors.maxGuests.message}</p>}
+				{errors.maxGuests && <p className="text-destructive">{errors.maxGuests.message}</p>}
 			</div>
 			<Button 
-				className="w-full bg-transparent text-black border-accent border-2 hover:bg-accent focus:bg-accent active:bg-accent" 
+				className="w-full bg-transparent border-brand border-2 hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand"
 				type="submit" 
 				disabled={isSubmitting}
 			>
 				{
-					actionType === "add" ? 
-						isSubmitting ? "Adding..." : "Add new hosting"  
-						: isSubmitting ? "Updating" : "Update hosting"
+					actionType === "add" ?
+						isSubmitting ? "Adding..." : "Add new place"
+						: isSubmitting ? "Updating..." : "Update place"
 				}
 			</Button>
 		</form>

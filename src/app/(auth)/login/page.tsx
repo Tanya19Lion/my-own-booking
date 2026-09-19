@@ -3,22 +3,23 @@ import Link from "next/link";
 import H1 from "@/components/h1";
 import LoginForm from "@/components/login-form";
 import MainBackground from '../../../../public/assets/background-img-10.jpg';
-import Image from "next/image";
+import HeroBackground from "@/components/hero-background";
 
 export default async function LogInPage() {
     return (
         <>
-            <section className="absolute inset-0 z-[-1] overflow-hidden">
-                <Image src={MainBackground} fill className="object-cover blur-2xl" alt="Main page background" quality={50} sizes="(max-width: 1280px) 100vw, 1280px"/>
-            </section>
+            <HeroBackground src={MainBackground}/>
             <H1 className="text-center mb-12">Log in</H1>          
             
-            <LoginForm />
+            {/* Solid-enough panel so the photo does not show through the transparent inputs. */}
+            <div className="w-full rounded-2xl border border-white/10 bg-slate-950/75 p-6 backdrop-blur-md sm:w-auto sm:p-8">
+                <LoginForm />
 
-            <p className="mt-6 text-sm">
-                No account yet?{" "}
-                <Link href="/signup" className="text-accent underline font-medium">Sign Up</Link>
-            </p>
+                <p className="mt-6 text-center text-sm">
+                    No account yet?{" "}
+                    <Link href="/signup" className="text-brand underline font-medium">Sign Up</Link>
+                </p>
+            </div>
         </>
     );
 }

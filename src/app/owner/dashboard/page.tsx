@@ -12,16 +12,16 @@ export default function OwnerDashboard() {
 
     return (
         <main className="main-container">
-            <H1 className="text-4xl font-bold mb-16">Hello, {owner.firstName} {owner.lastName}</H1>
+            <H1 className="w-full text-4xl mb-16">Hello, {owner.firstName} {owner.lastName}</H1>
             <div className="w-full flex flex-col gap-5 mb-10 sm:flex-row sm:items-center sm:justify-between">
-                <H2 className="text-2xl font-bold mb-0">
+                <H2 className="text-2xl mb-0">
                     {
                         hostings.length === 0
-                            ? "You don't have any hostings yet"
+                            ? "You haven't listed a place yet"
                             : (
                                 <>
-                                    Currently you have {" "} 
-                                    <span className="text-accent">{hostings.length}{'\u00A0'}{hostings.length === 1 ? 'hosting' : 'hostings'}</span>
+                                    You have {" "}
+                                    <span className="text-brand">{hostings.length}{'\u00A0'}{hostings.length === 1 ? 'place' : 'places'}</span>
                                 </>
                             )
                     }

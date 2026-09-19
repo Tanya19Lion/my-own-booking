@@ -89,6 +89,43 @@ export const getHostings = unstable_cache( async (rawParams: unknown) => {
 }
 );  
 
+// Home page row: the three best-rated places.
+export const getFeaturedHostings = unstable_cache(async (): Promise<HostingWithOwner[]> => {
+	const hostings = await prisma.hosting.findMany({
+		orderBy: {
+			rating: 'desc' as const,
+		},
+		include: {
+			owner: {
+				select: {
+					email: true,
+					firstName: true,
+					lastName: true,
+					bio: true,
+					avatarUrl: true,
+				},
+			},
+			availability: {
+				select: {
+					from: true,
+					to: true,
+				},
+			},
+		},
+		take: 3,
+	});
+
+	return hostings.map((hosting) => ({
+		...hosting,
+		availability: hosting.availability ?? undefined,
+	}));
+},
+['get-featured-hostings'],
+{
+	tags: ['get-hostings']
+}
+);
+
 export const getHostingsByIds = unstable_cache(async (ids: number[]) => {
 	if (!ids || ids.length === 0) {
 		return [];

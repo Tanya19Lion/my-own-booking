@@ -9,7 +9,7 @@ export const SignOutBtn = () => {
 
     return (
         <Button 
-            className="common-btn hover:bg-accent focus:bg-accent active:bg-accent" 
+            className="common-btn hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand"
             disabled={isPending}
             onClick={async () => {
                 startTransition(async () => await logOut())}

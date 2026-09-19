@@ -47,10 +47,11 @@ export default function FavouriteHostingsButton({ id, className, onChange }: Fav
 	return (
 		<Button 
 			onClick={handleFavouriteHosting} 
-			className={cn("border", className)} 
+			// A white chip on the photo, not a themed surface — so the colours are explicit.
+			className={cn("border bg-white hover:bg-white/80", className)}
 			variant="secondary" 
 		>
-			<Heart size={24} className={cn("transition", {"text-slate-950": !isFavourite, "fill-[#FF7205] text-[#FF7205]": isFavourite})} />
+			<Heart size={24} className={cn("transition", {"text-slate-950": !isFavourite, "fill-brand text-brand": isFavourite})} />
 		</Button>
 	);
 }

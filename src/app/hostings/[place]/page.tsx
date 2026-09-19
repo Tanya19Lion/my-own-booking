@@ -1,7 +1,7 @@
 import H1 from "@/components/h1";
 import { clearAndCapitalizeCity } from "@/lib/utils";
 import { Suspense } from "react";
-import Loading from "./loading";
+import SkeletonGrid from "@/components/skeleton-grid";
 import HostingsList from "@/components/hostings-list";
 import { Metadata } from "next";
 
@@ -14,32 +14,49 @@ export default async function HostingsPage({ params, searchParams }: HostingsPag
 	const resolvedParams = await params;
 	const resolvedsearchParams = await searchParams;
 	const place = resolvedParams.place;
-	const page = resolvedsearchParams.page ?? 1;
-	const maxGuests = resolvedsearchParams.guests ? +resolvedsearchParams.guests : 1;
-	const startDate = resolvedsearchParams.startDate ? new Date(resolvedsearchParams.startDate as string) : undefined;
-	const endDate = resolvedsearchParams.endDate ? new Date(resolvedsearchParams.endDate as string) : undefined;
+	// These come straight from the URL, so a typo must fall back to a default, not reach
+	// getHostings (which throws on invalid params) or toISOString (which throws on an invalid date).
+	const page = toPositiveInt(resolvedsearchParams.page);
+	const maxGuests = toPositiveInt(resolvedsearchParams.guests);
+	const startDate = toDate(resolvedsearchParams.startDate);
+	const endDate = toDate(resolvedsearchParams.endDate);
 
 	return (
 		<main className="main-container min-h-screen">
-			<H1 className="text-center px-3 mb-16">
-				{place === 'favorites' && 'Your favourite hostings'}
-				{place === 'all' && 'All hostings'}
-				{place !== 'all' && place !== 'favorites' && `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(place))}`}
+			<H1 className="w-full max-w-[1100px] mb-16">
+				{place === 'favorites' && 'Your favourite places'}
+				{place === 'all' && 'All places'}
+				{place !== 'all' && place !== 'favorites' && `Places in ${clearAndCapitalizeCity(decodeURIComponent(place))}`}
 			</H1>
 
-			<Suspense fallback={<Loading />} key={place + page}>
-				<HostingsList place={place} page={+page} maxGuests={maxGuests} startDate={startDate} endDate={endDate} />
+			<Suspense fallback={<SkeletonGrid />} key={place + page}>
+				<HostingsList place={place} page={page} maxGuests={maxGuests} startDate={startDate} endDate={endDate} />
 			</Suspense>
 		</main>
 	);
 }
 
+type SearchParam = string | string[] | undefined;
+
+const toPositiveInt = (value: SearchParam) => {
+	const number = Number(value);
+	return Number.isInteger(number) && number >= 1 ? number : 1;
+};
+
+const toDate = (value: SearchParam) => {
+	if (typeof value !== 'string') {
+		return undefined;
+	}
+	const date = new Date(value);
+	return isNaN(date.getTime()) ? undefined : date;
+};
+
 export async function generateMetadata(props: { params: Promise<{ place: string }>}): Promise<Metadata> {
     const params = await props.params;
     return {	
-		title: params.place === 'all' 
-			? 'All hostings' 
-			: `Hostings in ${clearAndCapitalizeCity(decodeURIComponent(params.place))}`,
+		title: params.place === 'all'
+			? 'All places'
+			: `Places in ${clearAndCapitalizeCity(decodeURIComponent(params.place))}`,
 	};
 }
 

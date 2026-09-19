@@ -197,7 +197,7 @@ function CarouselPrevious({
       data-slot="carousel-previous"
       variant={variant}
       size={size}
-      style={className === 'arrow-color' ? { color: "#fff" } : {color: "#020618"}}
+      style={className?.includes('arrow-color') ? { color: "#fff" } : {color: "#020618"}}
       className={cn(
         "absolute size-8 rounded-full",
         orientation === "horizontal"
@@ -232,7 +232,7 @@ function CarouselNext({
       data-slot="carousel-next"
       variant={variant}
       size={size}
-      style={className === 'arrow-color' ? { color: "#fff" } : {color: "#020618"}}
+      style={className?.includes('arrow-color') ? { color: "#fff" } : {color: "#020618"}}
       className={cn(
         "absolute size-8 rounded-full",
         orientation === "horizontal"
