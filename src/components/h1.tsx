@@ -7,7 +7,7 @@ type H1Props = {
 
 export default function H1({ children, className }: H1Props) {
 	return (
-		<h1 className={cn(`text-3xl lg:text-6xl font-bold tracking-tight text-center ${className}`)}>
+		<h1 className={cn("font-display text-3xl lg:text-6xl font-semibold tracking-tight", className)}>
 			{children}
 		</h1>
 	)

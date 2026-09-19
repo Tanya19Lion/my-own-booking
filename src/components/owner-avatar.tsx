@@ -13,7 +13,7 @@ export default function OwnerAvatar({ className, imageOnly, owner }: OwnerAvatar
 
 	return (
 		<div className="flex flex-row items-center gap-2">
-			<span>Owned by </span>
+			<span>Hosted by </span>
 			<Avatar className={className}>
 				<AvatarImage src={owner.avatarUrl} alt={displayName} className="rounded-full"/>
 				<AvatarFallback className="h-10 w-10 bg-secondary">

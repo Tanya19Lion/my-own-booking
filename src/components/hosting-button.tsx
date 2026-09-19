@@ -32,17 +32,17 @@ function HostingButton({ children, actionType, disabled, onClick, hosting, class
          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
             <DialogTrigger asChild>
                 {actionType === "add" ? (
-                    <Button className="common-btn hover:bg-accent focus:bg-accent active:bg-accent" disabled={pending}>
-                        Add new hosting
+                    <Button className="common-btn hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand" disabled={pending}>
+                        Add new place
                     </Button>
                     ) : (
                     <Button variant="secondary" disabled={pending} className={className}>{children}</Button>
                 )}               
             </DialogTrigger>
 
-            <DialogContent className="text-black max-h-screen sm:max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-h-screen sm:max-h-[80vh] overflow-y-auto">
                 <DialogHeader>                            
-                    <DialogTitle>{actionType === 'add' ? 'Add a new hosting' : 'Edit hosting'}</DialogTitle>
+                    <DialogTitle>{actionType === 'add' ? 'Add a new place' : 'Edit place'}</DialogTitle>
                 </DialogHeader>
                 
                 <HostingForm 

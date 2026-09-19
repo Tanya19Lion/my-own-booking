@@ -28,16 +28,16 @@ export default function LoginForm() {
 			<div className="space-y-2">
 				<Label htmlFor="email" >Email</Label>
 				<Input id="email" type="email" {...register('email')} className="border border-gray-300 rounded-md p-2" />
-				{errors.email && <p className="text-red-500">{errors.email.message}</p>}
+				{errors.email && <p className="text-destructive">{errors.email.message}</p>}
 			</div>
 			<div className="space-y-2">				
 				<Label htmlFor="password">Password</Label>	
 				<Input id="password" type="password" {...register('password')} className="border border-gray-300 rounded-md p-2" />
-				{errors.password && <p className="text-red-500">{errors.password.message}</p>}
+				{errors.password && <p className="text-destructive">{errors.password.message}</p>}
 			</div>
 			<Button 
 				type="submit" 
-				className="w-full common-btn hover:bg-accent focus:bg-accent active:bg-accent"
+				className="w-full common-btn hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand"
 				disabled={isSubmitting}
 			>
 				{isSubmitting ? "Logging in..." : "Log In"}

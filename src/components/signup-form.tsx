@@ -86,12 +86,12 @@ export default function SignUpForm() {
 			<div className="space-y-2">
 				<Label htmlFor="firstName">First name</Label>
 				<Input id="firstName" {...register('firstName')} className="border border-gray-300 rounded-md p-2" />
-				{errors.firstName && <p className="text-red-500">{errors.firstName.message}</p>}
+				{errors.firstName && <p className="text-destructive">{errors.firstName.message}</p>}
 			</div>
 			<div className="space-y-2">
 				<Label htmlFor="lastName">Last name</Label>
 				<Input id="lastName" {...register('lastName')} className="border border-gray-300 rounded-md p-2" />
-				{errors.lastName && <p className="text-red-500">{errors.lastName.message}</p>}
+				{errors.lastName && <p className="text-destructive">{errors.lastName.message}</p>}
 			</div>
 			<div className="space-y-2">
 				<Label htmlFor="bio">Short information</Label>
@@ -102,17 +102,17 @@ export default function SignUpForm() {
 					maxLength={1000}
 					className="border border-gray-300 rounded-md p-2" 
 				/>
-				{errors.bio && <p className="text-red-500">{errors.bio.message}</p>}
+				{errors.bio && <p className="text-destructive">{errors.bio.message}</p>}
 			</div>
 			<div className="space-y-2">
-				<Label htmlFor="photo" className="sr-only">Upload you photo</Label>
+				<Label htmlFor="photo" className="sr-only">Upload your photo</Label>
 				<Input id="photo" type="file" name="photo" accept="image/*" onChange={handlePhotoChange} ref={fileInputRef} className="visually-hidden" />
 				<Button 
 					type="button"
 					disabled={isSubmitting}
 					onClick={() => fileInputRef.current?.click()} 
-					className="w-full text-white rounded-md border border-gray-200 bg-transparent cursor-pointer hover:text-accent hover:bg-transparent hover:border-accent transition-200"
-				>Upload you photo</Button>					
+					className="w-full text-white rounded-md border border-gray-200 bg-transparent cursor-pointer hover:text-brand hover:bg-transparent hover:border-brand transition-200"
+				>Upload your photo</Button>					
 			</div>
 			{photoPreview && (
 				<div className="space-y-2">
@@ -122,7 +122,7 @@ export default function SignUpForm() {
 						<Button 
 							onClick={handleRemovePhoto} 
 							variant="outline" 
-							className="mt-2 text-accent border-accent transition-colors duration-200"
+							className="mt-2 text-brand border-brand transition-colors duration-200"
 						>
 							Remove Photo
 						</Button>
@@ -132,17 +132,17 @@ export default function SignUpForm() {
 			<div className="space-y-2">
 				<Label htmlFor="email" >Email</Label>
 				<Input type="email" id="email" {...register('email')} className="border border-gray-300 rounded-md p-2" />
-				{errors.email && <p className="text-red-500">{errors.email.message}</p>}
+				{errors.email && <p className="text-destructive">{errors.email.message}</p>}
 			</div>
 			<div className="space-y-2">				
 				<Label htmlFor="password">Password</Label>	
 				<Input type="password" id="password" {...register('password')} className="border border-gray-300 rounded-md p-2" />
-				{errors.password && <p className="text-red-500">{errors.password.message}</p>}
+				{errors.password && <p className="text-destructive">{errors.password.message}</p>}
 			</div>
 			<Button 
 				disabled={isSubmitting}
 				type="submit" 
-				className="w-full common-btn hover:bg-accent focus:bg-accent active:bg-accent"
+				className="w-full common-btn hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand"
 			>
 				{isSubmitting ? 'Signing Up...' : 'Sign Up'}
 			</Button>			

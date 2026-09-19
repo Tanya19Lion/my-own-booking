@@ -30,7 +30,7 @@ export default function HostingCardImages({ hosting, className }: HostingCardIma
 						<Image					
 							src={image.startsWith("http") ? image : changeImageUrl(image)}
 							alt={`${hosting.name} Image ${index+1}`} 
-							className="w-full h-[200px] object-cover rounded-md" 
+							className="w-full h-[200px] object-cover rounded-md transition-transform duration-300 ease-out motion-safe:group-hover:scale-103" 
 							width={500}
 							height={280}
 						/> 

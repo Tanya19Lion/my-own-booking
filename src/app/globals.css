@@ -6,8 +6,7 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  /* --foreground: oklch(0.129 0.042 264.695); */
-  --foreground: oklch(100% 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -17,7 +16,7 @@
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.854 0.046 257.417);
+  --muted-foreground: oklch(0.554 0.046 257.417);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -120,8 +119,17 @@
   }
 }
 
+@theme inline {
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display--font-variation-settings: "SOFT" 50;
+}
+
 @theme {
-  --color-accent: #05acff ; 
+  /* Brand accent — the single action/identity colour, taken from the logo. */
+  --color-brand: #ff7205;
+  --color-brand-hover: #ff8c33;
+  /* Blue is demoted to focus rings only. */
+  --color-focus: #05acff;
 }
 
 @layer components {
@@ -138,12 +146,17 @@
     }
   } 
 
+  /* Focus ring for a clickable card. Hover feedback lives on the card border and the photo
+     (see hosting-card.tsx), not on scaling the whole card. */
   .state-effects {
-    @apply hover:scale-103 focus:scale-103 transition duration-500;
+    @apply rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
   }
 
+  /* Hover/active colours stay on the call sites: they must be utilities to beat
+     buttonVariants' own `bg-transparent`/`hover:bg-primary`. Giving Button a real
+     `brand` variant would fix that — item 9 in docs/ui-audit.md, skipped by choice. */
   .common-btn {
-    @apply inset-shadow-[0_0_5px_5px_#05acff] text-white rounded-md py-2 px-4 bg-transparent transition duration-200;  
+    @apply text-white rounded-md py-2 px-4 bg-transparent transition duration-200;
   }
 
   .visually-hidden {
@@ -166,6 +179,15 @@
   }
 }
 
+/* The glow lives in the utilities layer so it outranks buttonVariants' `shadow-xs`.
+   Tailwind cannot build `inset-shadow-[…var(--color-brand)]`, so it is written as
+   plain CSS to keep the brand colour in one place. */
+@layer utilities {
+  .common-btn {
+    box-shadow: inset 0 0 5px 5px var(--color-brand);
+  }
+}
+
 @view-transition {
   navigation: auto;
 }
@@ -181,7 +203,7 @@
 /* Variables declaration */
 /* prettier-ignore */
 .rdp-root {
-  --rdp-accent-color: #05acff; /* The accent color used for selected days and UI elements. */
+  --rdp-accent-color: var(--color-brand); /* The accent color used for selected days and UI elements. */
   --rdp-accent-background-color: #fff; /* The accent background color used for selected days and UI elements. */
 
   --rdp-day-height: 32px; /* The height of the day cells. */

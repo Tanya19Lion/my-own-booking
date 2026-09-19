@@ -1,5 +1,5 @@
 import HostingCard from "./hosting-card";
-import H2 from "./h2";
+import EmptyState from "./empty-state";
 import PaginationControls from "./pagination-controls";
 import { getHostings } from "@/lib/server-utils";
 import { HostingWithOwner } from "@/lib/types";
@@ -37,7 +37,15 @@ export default async function HostingsList({ place, page = 1, maxGuests, startDa
 							} as HostingWithOwner}
 						/>
 					))
-					: <H2 className="text-muted-foreground">Sorry, no hostings found with the entered data</H2>
+					: (
+						<EmptyState
+							title="No places match your search"
+							description="Try another city, or widen your dates."
+							// On "all places" a link back to the same list would go nowhere.
+							href={place === 'all' ? '/' : '/hostings/all'}
+							action={place === 'all' ? 'Start a new search' : 'Browse all places'}
+						/>
+					)
 			}	
 
 			<PaginationControls previousPath={previousPath} nextPath={nextPath}/>

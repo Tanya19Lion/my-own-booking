@@ -14,11 +14,11 @@ const routes = [
 		path: '/'
 	},
 	{
-		name: 'All Hostings',
+		name: 'All places',
 		path: '/hostings/all'
 	},
 	{
-		name: 'Favorites',
+		name: 'Favourites',
 		path: '/favourites'
 	}
 ];
@@ -115,7 +115,7 @@ export default function Header() {
 											onClick={() => setIsMobileMenuOpen(false)}
 											className={cn("block text-sm hover:bg-white/10 focus:bg-white/10 transition duration-200 p-2", {
 												"text-white": activePathname.toLowerCase() === route.path,
-												"text-white/50": activePathname !== route.path
+												"text-white/70": activePathname !== route.path
 											})}
 										>
 											{route.name}
@@ -149,7 +149,7 @@ const HeaderNav = ({ routes, activePathname }: HeaderNavProps) => {
 									key={route.path} 
 									className={cn("hover:text-white transition relative flex items-center", {
 										'text-white': activePathname.toLowerCase() === route.path,
-										'text-white/50': activePathname !== route.path
+										'text-white/70': activePathname !== route.path
 									})}
 								>
 									<Link href={route.path}>{route.name}</Link>
@@ -157,7 +157,7 @@ const HeaderNav = ({ routes, activePathname }: HeaderNavProps) => {
 										activePathname.toLowerCase() === route.path && (
 											<motion.div 
 												layoutId="nav-active" 
-												className="bg-[#FF7205] h-1 w-full absolute bottom-[-25]"
+												className="bg-brand h-1 w-full absolute -bottom-2"
 												initial={false}
 												animate={{ width: '100%' }}
 												transition={{ duration: 0.2 }}

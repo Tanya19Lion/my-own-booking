@@ -7,7 +7,7 @@ type H2Props = {
 
 export default function H2({ children, className }: H2Props) {
 	return (
-		<h2 className={cn("text-2xl lg:text-4xl font-bold tracking-tight mb-4 text-center text-white/[0.87] dark:text-white/[0.87]", className)}>
+		<h2 className={cn("font-display text-2xl lg:text-4xl font-semibold tracking-tight mb-4 text-white/[0.87] dark:text-white/[0.87]", className)}>
 			{children}
 		</h2>
 	)

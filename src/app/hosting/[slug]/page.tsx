@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Card } from "@/components/ui/card";
 import HostingDetailsCardImages from "@/components/hosting-details-card-images";
 import { getHosting } from "@/lib/server-utils";
-import { DollarSign, Pin, Users } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import OwnerAvatar from "@/components/owner-avatar";
 import FavouriteHostingsButton from "@/components/favourite-hostings-button";
 
@@ -13,6 +12,10 @@ type PageProps = {
 	}>;
 };
 
+// unstable_cache round-trips through JSON, so availability dates arrive as strings.
+const formatDate = (date: Date | string) =>
+	new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+
 export default async function HostingPage(props: PageProps) {
     const params = await props.params;
     const hosting = await getHosting(params.slug);
@@ -21,54 +24,62 @@ export default async function HostingPage(props: PageProps) {
 		throw new Error("Hosting not found!");
 	}
 
-    const { id, name, price, location, maxGuests, description, owner } = hosting;
+    const { id, name, price, location, maxGuests, description, owner, availability } = hosting;
+	const mailto = `mailto:${owner.email}?subject=${encodeURIComponent(`Stay at ${name}`)}`;
 
-    return (		
+    return (
         <main className="main-container min-h-screen">
-			<Card className="mx-auto p-6" key={id}>
-				{hosting && <HostingDetailsCardImages hosting={hosting} />}
-				<Separator className="mt-4 mb-6" />
-
-				<div className="flex justify-between gap-4">
-					<div className="flex flex-col gap-4">
-						<div className="flex items-center justify-between gap-6">
-							<h1 className="mb-2 text-2xl font-bold">{name}</h1>
-							<div>
-								<FavouriteHostingsButton id={id} className="heart-color"/>
-							</div>
-						</div>
-						
-						<div className="whitespace-pre-line">{description}</div>
-
-						<div className="flex items-center gap-2">
-							<DollarSign className="h-4 w-4 text-foreground" />
-							<span className="text-muted-foreground">
-								<span className="font-bold text-foreground">{price} </span>
-								/ night
-							</span>
-						</div>					
-
-						<div className="flex items-center gap-2">
-							<Pin className="h-4 w-4 text-foreground" />
-							<span className="text-muted-foreground">{location}</span>
-						</div>
-
-						<div className="flex items-center gap-2">
-							<Users className="h-4 w-4 text-foreground" />
-							<span className="text-muted-foreground">{maxGuests} guests</span>
-						</div>
+			<article className="w-full max-w-6xl">
+				<div className="mb-6 flex items-start justify-between gap-4">
+					<div>
+						<h1 className="font-display text-3xl font-semibold tracking-tight lg:text-4xl">{name}</h1>
+						<p className="mt-2 text-muted-foreground">
+							{location} · {maxGuests} {maxGuests === 1 ? 'guest' : 'guests'}
+						</p>
 					</div>
-
-					
+					<FavouriteHostingsButton id={id} className="heart-color shrink-0"/>
 				</div>
 
-				<Separator className="my-4"/>
+				<HostingDetailsCardImages hosting={hosting} />
 
-				{owner && <OwnerAvatar owner={owner} className="w-10 h-10"/>}	
-				<p className="mt-5">{owner.bio}</p>
-				<a href={`mailto:${owner.email}`} className="mt-5">Contacts: <strong>{owner.email}</strong></a>
-			</Card>
-		</main>	
+				<div className="mt-10 grid gap-10 lg:grid-cols-[1fr_360px]">
+					<div>
+						<section>
+							<h2 className="text-xl font-semibold">About this place</h2>
+							<p className="mt-4 whitespace-pre-line leading-relaxed text-white/80">{description}</p>
+						</section>
+
+						<Separator className="my-8"/>
+
+						<section>
+							<OwnerAvatar owner={owner} className="w-12 h-12"/>
+							<p className="mt-4 leading-relaxed text-white/80">{owner.bio}</p>
+						</section>
+					</div>
+
+					{/* On mobile the price panel comes straight after the gallery, not after the whole bio. */}
+					<aside className="order-first self-start rounded-xl border border-white/10 bg-white/[3%] p-6 lg:order-none lg:sticky lg:top-8">
+						<p className="text-3xl font-semibold tabular-nums">
+							${price.toLocaleString('en-US')}
+							<span className="text-base font-normal text-muted-foreground"> / night</span>
+						</p>
+
+						{availability?.from && availability?.to && (
+							<p className="mt-4 text-sm text-muted-foreground">
+								Available {formatDate(availability.from)} – {formatDate(availability.to)}
+							</p>
+						)}
+
+						<Button asChild className="mt-6 w-full common-btn hover:bg-brand hover:text-slate-950 focus:bg-brand active:bg-brand">
+							<a href={mailto}>Contact host</a>
+						</Button>
+						<p className="mt-3 text-center text-sm text-muted-foreground">
+							Opens an email to {owner.firstName}
+						</p>
+					</aside>
+				</div>
+			</article>
+		</main>
 	);
 }
 

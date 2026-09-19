@@ -15,10 +15,10 @@ function StartDatePopover({ startDate, setStartDate, className }: StartDatePopov
         <Popover>
             <PopoverTrigger asChild>
                 <Button className={cn("w-full justify-center text-left border-1 border-color-foreground hover:!bg-transparent", !startDate && "text-muted-foreground", className)}>
-                    {startDate ? format(startDate, 'PPP') : 'Start Date'}
+                    {startDate ? format(startDate, 'MMM d, yyyy') : 'Start Date'}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 pointer-events-auto z-[999] bg-white">
+            <PopoverContent className="w-auto p-0 pointer-events-auto z-[999]">
                 <DayPicker
                     animate
                     mode="single"

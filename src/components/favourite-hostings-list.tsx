@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import H2 from "./h2";
+import EmptyState from "./empty-state";
+import SkeletonGrid from "./skeleton-grid";
 import HostingCard from './hosting-card';
 import { HostingWithOwner } from "@/lib/types";
 import { fetchFavouritesByIds } from "@/actions/hosting-actions";
@@ -9,7 +10,8 @@ import { fetchFavouritesByIds } from "@/actions/hosting-actions";
 export const LOCAL_STORAGE_KEY = "favouriteHostings";
 
 export default function FavouriteHostingsList() {
-    const [favouriteHostings, setFavouriteHostings] = useState<HostingWithOwner[]>([]);
+    // null until the first load finishes — starting from [] flashed the empty state before the cards.
+    const [favouriteHostings, setFavouriteHostings] = useState<HostingWithOwner[] | null>(null);
 
     const loadFavourites = async () => {
 		try {
@@ -24,6 +26,7 @@ export default function FavouriteHostingsList() {
 			setFavouriteHostings(data);
 		} catch (error) {
 			console.error('Failed to load favourite hostings:', error);
+			setFavouriteHostings((current) => current ?? []);
 		}
 	};
 
@@ -31,12 +34,23 @@ export default function FavouriteHostingsList() {
 		loadFavourites();
 	}, []);
 
+    if (favouriteHostings === null) {
+        return <SkeletonGrid />;
+    }
+
     return (
         <section className="flex flex-wrap justify-center gap-10 max-w-[1100px]">
             {
                 favouriteHostings.length !== 0 
                     ? favouriteHostings.map((hosting: HostingWithOwner) => <HostingCard key={hosting.id} hosting={hosting} onFavouriteChange={loadFavourites} />) 
-                    : <H2 className="text-muted-foreground">You have no favourite hostings yet</H2>
+                    : (
+                        <EmptyState
+                            title="No favourites yet"
+                            description="Tap the heart on any place to save it here."
+                            href="/hostings/all"
+                            action="Browse all places"
+                        />
+                    )
             }	         
         </section>
     )
