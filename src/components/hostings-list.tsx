@@ -21,8 +21,16 @@ export default async function HostingsList({ place, page = 1, maxGuests, startDa
 		endDate: endDate?.toISOString(),    
 	});
 
-	const previousPath =  page > 1 ? `/hostings/${place}?page=${page - 1}` : '';
-	const nextPath = (totalCount > 6 * page) ? `/hostings/${place}?page=${page + 1}` : '';
+	// Keep the search filters in the pagination links, otherwise page 2 falls back to the defaults.
+	const pagePath = (targetPage: number) => {
+		const searchParams = new URLSearchParams({ page: String(targetPage), guests: String(maxGuests) });
+		if (startDate) searchParams.set('startDate', startDate.toISOString());
+		if (endDate) searchParams.set('endDate', endDate.toISOString());
+		return `/hostings/${place}?${searchParams}`;
+	};
+
+	const previousPath =  page > 1 ? pagePath(page - 1) : '';
+	const nextPath = (totalCount > 6 * page) ? pagePath(page + 1) : '';
 
 	return (
 		<section className="flex flex-wrap justify-center gap-10 max-w-[1100px]">

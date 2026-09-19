@@ -42,7 +42,7 @@ export default function SearchForm() {
 		if (endDate) {
 			formData.append("endDate", endDate.toISOString());
 		}
-		formData.append("guests", data.guests.toString());
+		formData.append("guests", guests.toString());
 
 		const error = await searchHosting(formData);
 		if (error) {
