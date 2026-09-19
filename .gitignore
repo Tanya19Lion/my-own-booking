@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# claude code: personal permissions (shared settings.json stays tracked)
+.claude/settings.local.json
